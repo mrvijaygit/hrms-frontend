@@ -1,0 +1,1 @@
+export type sortingType = { direction: string, accessor: string};

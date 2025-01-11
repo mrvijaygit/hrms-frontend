@@ -1,0 +1,148 @@
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-Black.eot");
+  src: url("../fonts/Roboto-Black.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/Roboto-Black.woff2") format("woff2"),
+    url("../fonts/Roboto-Black.woff") format("woff"),
+    url("../fonts/Roboto-Black.ttf") format("truetype"),
+    url("../fonts/Roboto-Black.svg#Roboto-Black") format("svg");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-Medium.eot");
+  src: url("../fonts/Roboto-Medium.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/Roboto-Medium.woff2") format("woff2"),
+    url("../fonts/Roboto-Medium.woff") format("woff"),
+    url("../fonts/Roboto-Medium.ttf") format("truetype"),
+    url("../fonts/Roboto-Medium.svg#Roboto-Medium") format("svg");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-Light.eot");
+  src: url("../fonts/Roboto-Light.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/Roboto-Light.woff2") format("woff2"),
+    url("../fonts/Roboto-Light.woff") format("woff"),
+    url("../fonts/Roboto-Light.ttf") format("truetype"),
+    url("../fonts/Roboto-Light.svg#Roboto-Light") format("svg");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-Regular.eot");
+  src: url("../fonts/Roboto-Regular.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/Roboto-Regular.woff2") format("woff2"),
+    url("../fonts/Roboto-Regular.woff") format("woff"),
+    url("../fonts/Roboto-Regular.ttf") format("truetype"),
+    url("../fonts/Roboto-Regular.svg#Roboto-Regular") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-Thin.eot");
+  src: url("../fonts/Roboto-Thin.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/Roboto-Thin.woff2") format("woff2"),
+    url("../fonts/Roboto-Thin.woff") format("woff"),
+    url("../fonts/Roboto-Thin.ttf") format("truetype"),
+    url("../fonts/Roboto-Thin.svg#Roboto-Thin") format("svg");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-Bold.eot");
+  src: url("../fonts/Roboto-Bold.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/Roboto-Bold.woff2") format("woff2"),
+    url("../fonts/Roboto-Bold.woff") format("woff"),
+    url("../fonts/Roboto-Bold.ttf") format("truetype"),
+    url("../fonts/Roboto-Bold.svg#Roboto-Bold") format("svg");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+::-webkit-scrollbar{
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb{
+  background: #d9d9d9;
+  border-radius: 4px;
+}
+
+a{
+  text-decoration: none;
+}
+
+table tr th{ white-space: nowrap; text-transform: capitalize; font-weight: normal;}
+
+.table-sorting.active{
+  position: relative;
+  padding-right: 10px;
+  cursor: pointer;
+}
+.table-sorting.active::before{
+  bottom: 50%;
+  content: "▲";
+  content: "▲" / "";
+}
+.table-sorting.active::after{
+  top: 50%;
+  content: "▼";
+  content: "▼" / "";
+}
+.table-sorting.active::before, .table-sorting.active::after{
+  position: absolute;
+  display: block;
+  opacity: 0.15;
+  right: 0;
+  line-height: 9px;
+  font-size: 0.8em;
+}
+.table-sorting.active[data-sort = "ASC"]::before, .table-sorting.active[data-sort = "DESC"]::after{
+  opacity: .8;
+
+}
+.border-bottom{
+  border-bottom: 1px solid var(--mantine-color-gray-3);
+}
+.table-layout-fixed{
+  table-layout: fixed;
+}
+.text-center{
+  text-align: center;
+}
+.text-capitalize{
+  text-transform: capitalize;
+}
+.cursor-pointer{
+  cursor: pointer;
+}
+.table-nowrap tr th, .table-nowrap tr td{
+  text-wrap: nowrap;
+}
+.scrollY{
+  overflow: hidden auto;
+}

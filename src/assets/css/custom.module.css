@@ -1,0 +1,70 @@
+.mantine-Button-section{
+    padding: 0.25rem 0 0.25rem 0.75rem;
+    margin-inline-end: 0;
+    height: 100%;
+}
+.mantine-Button-label{
+    padding:0.25rem 0.75rem;
+    font-weight: 400;
+    line-height:normal;
+}
+.mantine-Button-root:has(span.mantine-Button-section) .mantine-Button-label{
+    padding:0.25rem 0.75rem 0.25rem 0.25rem;
+}
+.mantine-Button-root[data-size='lg'] .mantine-Button-label{
+    padding:12px 32px;
+    font-size: 16px;
+}
+.mantine-Button-root{
+    border: 0;
+    padding: 0;
+    border-radius: 4px;
+    text-transform: capitalize;
+}
+.mantine-Button-root[data-size='lg'], .mantine-Input-input{
+    border-radius: 8px;
+}
+.mantine-Select-option{
+    border-radius: 0;
+}
+.mantine-Select-section, .mantine-MultiSelect-section{
+    font-size: 12px;
+}
+.mantine-Select-input[data-expanded = true] ~ .mantine-Select-section{
+    transform: rotate(180deg);
+}
+.mantine-Select-option:not([data-checked = true]):hover{
+    color: var(--mantine-primary-color-8);
+    background-color: var(--mantine-primary-color-0);
+}
+.mantine-Select-option[data-checked = true]{
+    color: white;
+    background-color: var(--mantine-primary-color-8);
+}
+.mantine-Tooltip-tooltip{
+    padding: 8px;
+    filter: drop-shadow(0 0 3px #0003);
+}
+.mantine-MultiSelect-pillsList{
+    padding: 4px 0;
+    gap: 4px;
+}
+.mantine-MultiSelect-input{
+    height: auto;
+}
+.mantine-MultiSelect-input[data-expanded = true] ~ .mantine-MultiSelect-section{
+    transform: rotate(180deg);
+}
+.mantine-Pill-label{
+    border-radius: 2px;
+    border: 1px solid var(--mantine-color-gray-3);
+}
+.mantine-PasswordInput-visibilityToggle:hover{
+    background-color: transparent;
+}
+.mantine-Menu-item{
+    padding:var(--mantine-spacing-xs)  var(--mantine-spacing-sm);
+}
+.mantine-InputWrapper-label{
+    margin-bottom: 6px;
+}
