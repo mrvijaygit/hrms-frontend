@@ -72,8 +72,8 @@ function DocumentForm() {
               }
               {previews}
               <Group justify='flex-end' gap='sm' mt='sm'>
-                  <Button leftSection={<FaXmark/>} color='red' onClick={() => form.reset()}>Clear</Button>
-                  <Button leftSection={<FaFloppyDisk/>} color='green' type='submit'>Save</Button>
+                  <Button leftSection={<FaXmark/>} color='dark.6' onClick={() => form.reset()}>Clear</Button>
+                  <Button leftSection={<FaFloppyDisk/>} type='submit'>Save</Button>
               </Group>
             </Grid.Col>
             <Grid.Col span={{md:6}}>

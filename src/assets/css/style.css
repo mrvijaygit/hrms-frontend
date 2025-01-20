@@ -116,7 +116,7 @@ table tr th{ white-space: nowrap; text-transform: capitalize; font-weight: norma
 .table-sorting.active::before, .table-sorting.active::after{
   position: absolute;
   display: block;
-  opacity: 0.15;
+  opacity: 0.3;
   right: 0;
   line-height: 9px;
   font-size: 0.8em;
@@ -140,9 +140,15 @@ table tr th{ white-space: nowrap; text-transform: capitalize; font-weight: norma
 .cursor-pointer{
   cursor: pointer;
 }
-.table-nowrap tr th, .table-nowrap tr td{
+.table-nowrap tr th, .table-nowrap tr td, .text-nowrap{
   text-wrap: nowrap;
 }
 .scrollY{
   overflow: hidden auto;
+}
+.object-pos-center{
+  object-position: center;
+}
+.table-responsive{
+  overflow: auto;
 }

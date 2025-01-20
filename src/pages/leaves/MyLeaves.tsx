@@ -1,6 +1,6 @@
 import { useDisclosure } from '@mantine/hooks';
-import {Box, Button, ComboboxData, Drawer, Grid, Group, NumberInput, Pagination, Paper,Select,Text, Textarea, Title } from "@mantine/core";
-import { FaFloppyDisk, FaPlus, FaXmark } from "react-icons/fa6";
+import {Box, Button, ComboboxData, Drawer, Grid, Group, Pagination, Paper,Select,Text, Textarea, Title, Modal, Divider } from "@mantine/core";
+import { FaEye, FaFloppyDisk, FaPlus, FaXmark } from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
 import { useForm } from "@mantine/form";
@@ -11,7 +11,6 @@ import type { dataType } from '../../types/LeaveRequest';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { DatePickerInput } from '@mantine/dates';
 import { useAppSelector } from "../../redux/hook";
-
 type sortingType = { direction: string, accessor: string};
 
 export default function Requests() {
@@ -22,6 +21,7 @@ export default function Requests() {
   const topRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
+  const [modelOpened, setModelOpened] = useDisclosure(false);
   const [triggerApi, setTriggerApi] = useState<Boolean>(true);
   const {state, dispatch}  = UseLeaveRequest();
   const [sort, setSort] = useState({} as sortingType);
@@ -34,7 +34,6 @@ export default function Requests() {
       m_leave_type_id:null,
       start_date:null,
       end_date:null,
-      no_of_days:'',
       reason:"",
     },
     validate:{
@@ -48,11 +47,9 @@ export default function Requests() {
         }
         return null;
       },
-      no_of_days: (value) => (String(value).trim().length > 0 ? null : "Required"),
       reason: (value) => (value.trim().length > 0 ? null : "Required")
     }
   });
-
 
   useLayoutEffect(() => {
     const calculateTableHeight = () => {
@@ -72,7 +69,6 @@ export default function Requests() {
 
     return () => window.removeEventListener('resize', calculateTableHeight);
   }, []);
-
 
   useEffect(()=>{
     (async()=>{
@@ -108,6 +104,14 @@ export default function Requests() {
     })();
   },[]);
 
+  function handleViewDetail(id:number){
+    if(state.data != null && state.data.length > 0){
+      let x = state.data.filter((item) => item.leave_id == id);
+      dispatch({'type':'setViewDetais', 'payload':x[0]});
+      setModelOpened.open();
+    }
+  }
+
 
   const handleSubmit = async(values:dataType) =>{
     try{
@@ -117,8 +121,8 @@ export default function Requests() {
       close();
       setTriggerApi((prev) => (prev == false) ? true : false);
     }
-    catch(error:any){
-      alert.error(error);
+    catch(err:any){
+      alert.error(err, true);
     }
   }
 
@@ -150,9 +154,16 @@ export default function Requests() {
       sortDirection: sort.accessor === 'end_date' ? sort.direction : 'none'
     },
     {
+      Header:'No. of Days',
+      accessor:'no_of_days',
+      width: 100,
+      headerClassName:"text-center",
+      sortDirection: sort.accessor === 'no_of_days' ? sort.direction : 'none'
+    },
+    {
       Header:'Status',
       accessor:'leave_status',
-      width: 100,
+      width: 80,
       headerClassName:"text-center",
       sortDirection: sort.accessor === 'leave_status' ? sort.direction : 'none',
       Cell:({row})=>{
@@ -164,8 +175,18 @@ export default function Requests() {
         accessor:'reason',
         width: 300,
         disableSortBy:true,
-    }
-  ], [sort]);
+    },
+    {
+      Header:'Action',
+      width: 60,
+      headerClassName:"text-center",
+      Cell:({row})=>{
+          return  <Group gap='xs' justify='center'>
+            <Button variant='light' onClick={()=>handleViewDetail(row.original.leave_id)}><FaEye/></Button>
+          </Group>;
+      }
+    },
+  ], [sort, state.data]);
 
   const data:dataType[] = useMemo(()=>state.data, [state.data]);
 
@@ -213,26 +234,84 @@ export default function Requests() {
                 <Select data={leaveType != null ? leaveType : []} label="Leave Type" {...form.getInputProps('m_leave_type_id')}/>
               </Grid.Col>
               <Grid.Col span={6}>
-                <DatePickerInput label="Start Date" {...form.getInputProps('start_date')} clearable/>
+                <DatePickerInput label="Start Date" minDate={new Date()} {...form.getInputProps('start_date')} clearable/>
               </Grid.Col>
               <Grid.Col span={6}>
-                <DatePickerInput label="End Date" {...form.getInputProps('end_date')} clearable/>
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <NumberInput label="Number of Days" maxLength={2} {...form.getInputProps('no_of_days')}/>
+                <DatePickerInput label="End Date" minDate={new Date()} {...form.getInputProps('end_date')} clearable/>
               </Grid.Col>
               <Grid.Col span={12}>
-                <Textarea label="Reason" rows={5} {...form.getInputProps('reason')}/>
+                <Textarea label="Reason"  rows={8} {...form.getInputProps('reason')} />
               </Grid.Col>              
               <Grid.Col span={12}>
                 <Group justify="flex-end" gap='sm'>
-                  <Button  color="red" leftSection={<FaXmark/>} onClick={()=>form.reset()}>Clear</Button>
-                  <Button type='submit' color="green" leftSection={<FaFloppyDisk/>}>Save</Button>
+                  <Button  color="dark.6" leftSection={<FaXmark/>} onClick={()=>form.reset()}>Clear</Button>
+                  <Button type='submit' leftSection={<FaFloppyDisk/>}>Save</Button>
                 </Group>
               </Grid.Col>
           </Grid>
         </Box>
       </Drawer>
+      <Modal opened={modelOpened} onClose={setModelOpened.close} title="Leave Request Details" centered  overlayProps={{backgroundOpacity: 0.55, blur: 3}}>
+        {
+          state?.viewDetais != null && <>
+          <Grid gutter='sm'>
+              <Grid.Col span={{md:6}}>
+                <Text fz='xs' tt='uppercase' c='dark.3'>Type</Text>
+                <Text fw={500}>{state?.viewDetais.leave_type}</Text>
+              </Grid.Col>
+              <Grid.Col span={{md:6}}>
+                <Text fz='xs' tt='uppercase' c='dark.3'>Status</Text>
+                <Text fw={500} c={state?.viewDetais.status_color}>{state?.viewDetais.leave_status}</Text>
+              </Grid.Col>
+              <Grid.Col span={{md:6}}>
+                <Text fz='xs' tt='uppercase' c='dark.3'>Start date</Text>
+                <Text fw={500}>{String(state?.viewDetais.start_date)}</Text>
+              </Grid.Col>
+              <Grid.Col span={{md:6}}>
+                <Text fz='xs' tt='uppercase' c='dark.3'>End date</Text>
+                <Text fw={500}>{String(state?.viewDetais.end_date)}</Text>
+              </Grid.Col>
+              <Grid.Col span={{md:6}}>
+                <Text fz='xs' tt='uppercase' c='dark.3'>No.of days</Text>
+                <Text fw={500}>{state?.viewDetais.no_of_days}</Text>
+              </Grid.Col>
+              <Grid.Col span={{md:6}}>
+                <Text fz='xs' tt='uppercase' c='dark.3'>Created on</Text>
+                <Text fw={500}>{state?.viewDetais.created_on}</Text>
+              </Grid.Col>
+              <Grid.Col span={{md:12}}>
+                <Text fz='xs' tt='uppercase' c='dark.3'>Reason</Text>
+                <Text fw={400} mb='sm'>{state?.viewDetais.reason}</Text>
+                <Divider/>
+              </Grid.Col>
+
+              {
+                 Number(state?.viewDetais.m_leave_status_id) != 1 ? <>
+                  <Grid.Col span={{md:6}}>
+                    <Text fz='xs' tt='uppercase' c='dark.3'>Reviewed on</Text>
+                    <Text fw={500}>{state?.viewDetais.updated_on}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{md:6}}>
+                    <Text fz='xs' tt='uppercase' c='dark.3'>Reviewed by</Text>
+                    <Text fw={500}>{state?.viewDetais.updated_by}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{md:12}}>
+                    <Text fz='xs' tt='uppercase' c='dark.3'>Remarks</Text>
+                    <Text fw={400}>{state?.viewDetais.remarks}</Text>
+                  </Grid.Col>
+                 </> : <>
+                  <Grid.Col span={{md:12}}>
+                      <Text fw={500} c='dimmed' ta='center'>Waiting for review.</Text>
+                  </Grid.Col>
+                 </>
+              }
+
+
+          </Grid>
+          </>
+        }
+        
+      </Modal>
     </>
   )
 }

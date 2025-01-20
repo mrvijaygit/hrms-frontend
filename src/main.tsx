@@ -3,7 +3,8 @@ import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import './assets/css/style.css';
 import '@mantine/charts/styles.css';
-import {MantineProvider} from '@mantine/core';
+import {MantineProvider } from '@mantine/core';
+import {DatesProvider } from '@mantine/dates';
 import {ThemeModify} from './ThemeCustomize.ts';
 import Router from './Router.tsx';
 import { BrowserRouter } from 'react-router-dom';
@@ -12,9 +13,11 @@ import { Provider } from 'react-redux'
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <MantineProvider theme={ThemeModify}>
+        <DatesProvider settings={{locale:"en", timezone:"UTC"}}>
         <BrowserRouter>
           <Router />
         </BrowserRouter>
+        </DatesProvider>
     </MantineProvider>
   </Provider>
 )

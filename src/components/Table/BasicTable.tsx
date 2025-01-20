@@ -1,4 +1,4 @@
-import { Box, Table} from "@mantine/core"
+import { Box, Table, useMantineTheme} from "@mantine/core"
 import { memo } from "react";
 import {Column, useTable, useSortBy} from "react-table";
 
@@ -9,6 +9,8 @@ interface TablePropsType<T extends object> {
 }
 
 function TableComponent<T extends object>({columns, data, onHeaderClick}:TablePropsType<T>) {
+
+    const theme = useMantineTheme();
 
     const tableInstance = useTable({
             columns: columns,
@@ -21,7 +23,7 @@ function TableComponent<T extends object>({columns, data, onHeaderClick}:TablePr
   return (
     <>
         <Table {...getTableProps()} className="table-layout-fixed">
-              <Table.Thead bg='blue' c='white' pos='sticky'>
+              <Table.Thead bg={theme.colors.dark[6]} c='white' pos='sticky'>
                   {headerGroups.map((headerGroup, index)=>{
                   return <Table.Tr {...headerGroup.getHeaderGroupProps()} key={index}>
                           {

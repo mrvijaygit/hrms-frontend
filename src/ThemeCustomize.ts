@@ -9,12 +9,25 @@ import customCss from './assets/css/custom.module.css'
 export const ThemeModify:any = { 
   fontFamily: 'Roboto, sans-serif',
   focusRing:'never',
-  primaryColor:'blue',
+  primaryColor:'gold',
   primaryShade: 8,
   lineHeights:1.5,
   scale:1,
   colors:{
-    'green':["#eefcf5","#dcf7ea","#b4eed2","#88e5b8","#67dea3","#52d996","#46d78e","#38bf7a","#2da96b","#1b935b"]
+    'green':["#eefcf5","#dcf7ea","#b4eed2","#88e5b8","#67dea3","#52d996","#46d78e","#38bf7a","#2da96b","#1b935b"],
+    "gold": [
+      "#fff9e6",
+      "#fcf0d2",
+      "#f9e0a4",
+      "#f5cf72",
+      "#f3c048",
+      "#f1b72f",
+      "#f0b221",
+      "#d69c15",
+      "#be8a0b",
+      "#a57700"
+    ]
+    
   },
   components:{
     Button:Button.extend({

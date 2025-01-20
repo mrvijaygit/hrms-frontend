@@ -6,7 +6,7 @@ import { alert } from '../../utils/Alert';
 import { useDispatch } from 'react-redux';
 import {login} from "../../redux/userSlice"
 import loginImg from "../../assets/images/login.gif";
-import logo  from "../../assets/images/logo.png";
+import logo  from "../../assets/images/login_logo.jpeg";
 type LoginFormType = {
   email_id : string;
   pass_word : string;
@@ -65,9 +65,9 @@ function Login() {
         </Flex>
         <Flex flex={{lg:'50%'}} px='sm' direction='column' justify='center' align='center'>
           <Box w={{md:'60%', base:'100%'}}>
-            <Image  height="32px" mb="xs" fit="contain" src={logo} className="object-pos-start" />
+            <Image  height="80px" mb="xs" fit="contain" src={logo} className="object-pos-start" />
             <Text c='dimmed' ta='center' my='xs'>Enter your credentials to access your account</Text>
-            <Box component='form' mt='xl' onSubmit={form.onSubmit((values)=>handleSubmit(values))}>
+            <Box component='form' mt='lg' onSubmit={form.onSubmit((values)=>handleSubmit(values))}>
               <TextInput label="Email Address" key={form.key('email_id')} {...form.getInputProps('email_id')} />
               <PasswordInput label="Password" key={form.key('pass_word')} {...form.getInputProps('pass_word')} mt="md" />
               <Button type='submit' fullWidth mt="xl">Sign In</Button>

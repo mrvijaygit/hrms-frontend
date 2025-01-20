@@ -1,4 +1,4 @@
-import {Box, Divider, Flex, Grid, Group, Paper, Text, Title, UnstyledButton } from "@mantine/core"
+import {Box, Divider, Flex, Grid, Group, Paper, Text, Title, Button, useMantineTheme } from "@mantine/core"
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom"
 import { alert } from "../../utils/Alert";
@@ -8,6 +8,8 @@ import { FaAngleLeft } from "react-icons/fa6";
 function Profile() {
   const location = useLocation();
   const navigate = useNavigate();
+  const theme = useMantineTheme();
+
   const [data, setData] = useState<ProfileType | null>(null);
   useEffect(()=>{
     if(location.state.user_login_id){
@@ -34,13 +36,12 @@ function Profile() {
 
       <Grid gutter='xs'>
           <Grid.Col span={12}>
-            <Paper p='sm' shadow="xs">
+            <Paper p='sm' pt='xs' shadow="xs">
               <Group justify="space-between" gap="xs" align='center'>
-                <Text c='blue' fw={500}>Basic Details</Text>
-                <UnstyledButton c="blue"   onClick={()=>history.go(-1)}><Group align="center" gap={2}><FaAngleLeft/> Back</Group></UnstyledButton>
+                <Text c={theme.primaryColor} fw={500}>Basic Details</Text>
+                <Button color={theme.colors.dark[6]} leftSection={<FaAngleLeft/>}  onClick={()=>history.go(-1)}><Group align="center" gap={2}>Back</Group></Button>
               </Group>
-              
-              <Divider variant="dashed" my='xs'/>
+              <Divider variant="dashed" mb='xs' mt='xs' />
               <Grid>
                 <Grid.Col span={{lg:3,md:6}}>
                   <Text fz="xs" c='dark.3' tt="uppercase">Name</Text><Text fw={500}>{data?.basic.user_name}</Text>
@@ -89,7 +90,7 @@ function Profile() {
           </Grid.Col>
           <Grid.Col span={{lg:6}}>
             <Paper p='sm' shadow="xs">
-              <Text c='blue' fw={500}>Bank Details</Text>
+              <Text c={theme.primaryColor} fw={500}>Bank Details</Text>
               <Divider variant="dashed" my='xs'/>
               <Grid>
                 <Grid.Col span={{lg:6,md:12}}>
@@ -115,7 +116,7 @@ function Profile() {
           </Grid.Col>
           <Grid.Col span={{lg:6}}>
             <Paper p='sm' shadow="xs">
-              <Text c='blue' fw={500}>Education Details</Text>
+              <Text c={theme.primaryColor} fw={500}>Education Details</Text>
               <Divider variant="dashed" my='xs'/>
               <Grid>
                 <Grid.Col span={{md:6}}>
@@ -138,7 +139,7 @@ function Profile() {
           </Grid.Col>
           <Grid.Col span={12}>
             <Paper p='sm' shadow="xs">
-              <Text c='blue' fw={500}>Salary Details</Text>
+              <Text c={theme.primaryColor} fw={500}>Salary Details</Text>
               <Divider variant="dashed" my='xs'/>
               <Grid>
                 <Grid.Col span={{lg:3,md:6}}>

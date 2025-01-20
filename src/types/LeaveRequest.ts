@@ -9,11 +9,15 @@ export type dataType = {
     leave_type?:string;
     start_date:Date | null;
     end_date:Date | null;
-    no_of_days:number | string;
+    no_of_days?:number | null;
     reason:string;
     m_leave_status_id?:string | null;
     leave_status?:string;
     status_color?:string;
+    created_on?: string | null;
+    updated_on?: string | null;
+    updated_by?: string | null;
+    remarks?: string | null;
 }
 
 export interface stateType{
@@ -22,10 +26,11 @@ export interface stateType{
     page:number,
     totalPage:number,
     info:string,
+    viewDetais:dataType | null
 }
 
 export type actionType = {type:"setPage", payload:number} | {type:"setShow", payload:string | null} 
-| {type:"response", payload:{data:dataType[], totalRecord:number}};
+| {type:"response", payload:{data:dataType[], totalRecord:number} } | {type:"setViewDetais", payload:dataType | null};
 
 export type ContextType = {
     state:stateType,
@@ -55,13 +60,21 @@ export interface basicDetails {
     user_type: string;
     start_date: string;
     end_date: string;
+    no_of_days: number;
     reason: string;
     created_on: string;
-    updated_on: string;
-    updated_by: string;
+    reporting_id:number;
+    updated_on: string | null;
+    updated_by: string | null;
     remarks: string | null;
 }
-
+export interface recentLeaveHistory {
+    s_no:number;
+    leave_type:string;
+    dates:string;
+    no_of_days:number;
+}
 export type viewDetailType = {
-    basic:basicDetails | null
+    basic:basicDetails | null;
+    recentLeaveHistory: recentLeaveHistory[] | null;
 }

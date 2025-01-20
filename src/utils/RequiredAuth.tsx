@@ -1,6 +1,6 @@
-import React from "react";
+import React,{lazy} from "react";
 import { Navigate  } from "react-router-dom";
-import NotFound from "../pages/NotFound";
+const NotFound = lazy(()=> import("../pages/NotFound"));
 import { useAppSelector } from "../redux/hook";
 type RequiredAuthType = {
   children:React.ReactNode,

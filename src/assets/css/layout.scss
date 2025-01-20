@@ -14,7 +14,7 @@
         overflow: hidden auto;
         z-index: 4;
         .nav-item.active{
-            background-color: light-dark(var(--mantine-color-blue-0), var(--mantine-color-blue-7));
+            background-color: light-dark(var(--mantine-color-primary-0), var(--mantine-color-primary-7));
         }
 
         .navbar{
@@ -31,6 +31,15 @@
                 position: relative;
                 &:not(.active):hover {
                   background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
+                }
+
+                &.active{
+                    background-color: light-dark(var(--mantine-primary-color-0), var(--mantine-primary-color-7));
+                    color:black;
+
+                    .nav-item-left{
+                        color: var(--mantine-primary-color-8);
+                    }
                 }
 
                 .nav-item-text{
@@ -60,7 +69,7 @@
                         right: 8px;
                         transform: translateY(-50%);
                         transition: transform 200ms ease;
-                      }
+                    }
                 }
                 .nav-drop-menu{
                     padding-left: var(--mantine-spacing-sm);
@@ -79,8 +88,9 @@
                             color: light-dark(var(--mantine-color-black), var(--mantine-color-dark-0));
                         }
                         &.active{
-                            background-color: light-dark(var(--mantine-color-blue-0), var(--mantine-color-blue-7));
-                            border-left-color: var(--mantine-color-blue-7);
+                            background-color: light-dark(var(--mantine-primary-color-0), var(--mantine-primary-color-7));
+                            border-left-color: var(--mantine-primary-color-7);
+                            color:black;
                         }
                     }
                 } 
@@ -95,6 +105,10 @@
                     }
                 }
                 
+            }
+
+            .nav-dropdown:has(.nav-link.active) > .nav-item .nav-item-left {
+                color: var(--mantine-primary-color-7);
             }
         }
     } 

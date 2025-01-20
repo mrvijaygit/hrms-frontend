@@ -1,4 +1,4 @@
-import { Flex, Title, UnstyledButton, Menu, Group, Text, Box, Avatar } from "@mantine/core"
+import { Flex, Title, UnstyledButton, Menu, Group, Text, Box, Avatar , useMantineTheme} from "@mantine/core"
 import { FaBars } from "react-icons/fa6";
 import { useState } from "react";
 import cx from 'clsx';
@@ -15,6 +15,7 @@ import { logout } from "../../redux/userSlice";
 function Titlebar() {
 
   const navigate = useNavigate();
+  const theme = useMantineTheme();
 
   const dispatch = useAppDispatch();
   const userInfo = useAppSelector((state) => state.user);
@@ -39,7 +40,7 @@ function Titlebar() {
             <Menu.Target>
               <UnstyledButton py={0} className={cx(classes.user, { [classes.userActive]: userMenuOpened })}>
                 <Group align="center" gap='xs'>
-                  <Avatar color="blue" name={userInfo.user_name}/>
+                  <Avatar color={theme.primaryColor} name={userInfo.user_name}/>
                   <Box>
                     <Text fw={500} fz="sm">{userInfo.user_name}</Text>
                     <Text fw={500} fz="xs" c='dimmed' lh={1}>{userInfo.user_type}</Text>

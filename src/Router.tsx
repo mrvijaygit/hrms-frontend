@@ -60,15 +60,15 @@ export default function Router(){
 
                 <Route path='/leaves/holidays' element={<RequiredAuth m_user_type_id={[1000, 100]}><HolidayContext><Holidays /></HolidayContext></RequiredAuth>} />
                 <Route path='/leaves/types' element={<RequiredAuth m_user_type_id={[1000, 100]}><LeaveTypeContext><LeaveType /></LeaveTypeContext></RequiredAuth>} />
-                <Route path='/myleaves' element={<RequiredAuth m_user_type_id={[100, 20, 1]}><LeaveRequestContext><MyLeaves /></LeaveRequestContext></RequiredAuth>} />
-                <Route path='/leaverequests' element={<RequiredAuth m_user_type_id={[1000, 100, 20]}><LeaveRequestContext><LeavesRequests /></LeaveRequestContext></RequiredAuth>} />
-                <Route path='/leaverequests/view' element={<RequiredAuth m_user_type_id={[1000, 100, 20]}><LeavesRequestsView/></RequiredAuth>} />
+                <Route path='/leaves/myleaves' element={<RequiredAuth m_user_type_id={[100, 20, 1]}><LeaveRequestContext><MyLeaves /></LeaveRequestContext></RequiredAuth>} />
+                <Route path='/leaves/requests' element={<RequiredAuth m_user_type_id={[1000, 100, 20]}><LeaveRequestContext><LeavesRequests /></LeaveRequestContext></RequiredAuth>} />
+                <Route path='/leaves/requests/view' element={<RequiredAuth m_user_type_id={[1000, 100, 20]}><LeavesRequestsView/></RequiredAuth>} />
 
                 <Route path='/attendance/list' element={<RequiredAuth m_user_type_id={[1000, 100,20,1]}><AttendanceContent><AttendanceList /></AttendanceContent></RequiredAuth>} />
                 <Route path='/attendance/report' element={<RequiredAuth m_user_type_id={[1000, 100]}><AttendanceOverallReport /></RequiredAuth>} />
 
-                <Route path='/clientsManagement' element={<RequiredAuth m_user_type_id={[1000, 100]}><ClientsContext><ClientsManagement /></ClientsContext></RequiredAuth>} />
-                <Route path='/projects' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><ProjectsContext><ProjectsList /></ProjectsContext></RequiredAuth>} />
+                <Route path='/projects/clientsManagement' element={<RequiredAuth m_user_type_id={[1000, 100]}><ClientsContext><ClientsManagement /></ClientsContext></RequiredAuth>} />
+                <Route path='/projects/list' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><ProjectsContext><ProjectsList /></ProjectsContext></RequiredAuth>} />
                 <Route path='/projects/view' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><ProjectView /></RequiredAuth>} />
 
                 <Route path='/payroll/generatePayslip' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><GeneratePayslip /></RequiredAuth>} />

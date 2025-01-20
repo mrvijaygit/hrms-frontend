@@ -25,7 +25,7 @@ function Card({title, icon, count}:cardType) {
 
 function AdminCard(){
     const {state} = UseDashboard();
-    console.log(state.adminCard)
+
     return (
         <>
             <SimpleGrid cols={{xs: 2, md: 3 }} spacing="xs" verticalSpacing="xs" h='100%'>

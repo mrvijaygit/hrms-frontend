@@ -341,8 +341,8 @@ export default function List() {
             </Grid.Col>
               <Grid.Col span={12}>
                 <Group justify="flex-end" gap='sm'>
-                  <Button  color="red" leftSection={<FaXmark/>} onClick={()=>handleClearReset()}>{state.is_updated ? "Reset"  : "Clear"}</Button>
-                  <Button type='submit' color="green" leftSection={<FaFloppyDisk/>}>{state.is_updated ? "Update"  : "Save"}</Button>
+                  <Button  color="dark.6" leftSection={<FaXmark/>} onClick={()=>handleClearReset()}>{state.is_updated ? "Reset"  : "Clear"}</Button>
+                  <Button type='submit' leftSection={<FaFloppyDisk/>}>{state.is_updated ? "Update"  : "Save"}</Button>
                 </Group>
               </Grid.Col>
           </Grid>

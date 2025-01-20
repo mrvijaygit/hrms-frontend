@@ -1,13 +1,13 @@
-import { Box, Grid, Group, Paper, ScrollArea, Text, Title } from "@mantine/core"
+import { Box, Grid, Group, Paper, ScrollArea, Text, Title, useMantineTheme } from "@mantine/core"
 import { UseDashboard } from "../../contextapi/DashboardContext"
 function UpcomingHolidays() {
-    const {state} =  UseDashboard();
-
+  const {state} =  UseDashboard();
+  const theme = useMantineTheme();
   return (
     
         <Grid.Col span={{lg:4}}>
           <Paper p='sm' shadow='xs'>
-            <Title order={5} mb='sm'>Upcoming Holidays</Title>
+            <Title order={5} mb='sm' c={theme.primaryColor}>Upcoming Holidays</Title>
             <ScrollArea h={240}>
                    {
                      state?.upcomingHolidays != null && <>

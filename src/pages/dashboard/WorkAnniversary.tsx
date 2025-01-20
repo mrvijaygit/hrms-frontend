@@ -1,15 +1,16 @@
-import { Badge, Box, Grid, Group, Paper, ScrollArea, Text, Title } from '@mantine/core'
+import { Badge, Box, Grid, Group, Paper, ScrollArea, Text, Title, useMantineTheme } from '@mantine/core'
 import {BsPin } from "react-icons/bs";
 import { FaTrophy } from 'react-icons/fa6';
 
 import { UseDashboard } from "../../contextapi/DashboardContext"
 function WorkAnniversary() {
     const {state} =  UseDashboard();
+    const theme = useMantineTheme();
     return (
         <>
             <Grid.Col span={{ lg: 4 }}>
                 <Paper p='sm' shadow='xs'>
-                    <Title order={5} mb="sm">Work Anniversary</Title>
+                    <Title order={5} mb="sm" c={theme.primaryColor}>Work Anniversary</Title>
                     <ScrollArea h={240}>
                     {
                         state?.workAnniversary != null && <>

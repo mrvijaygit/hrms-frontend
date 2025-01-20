@@ -126,7 +126,7 @@ export default function Requests() {
       headerClassName:"text-center",
       Cell:({row})=>{
           return  <Group gap='xs' justify='center'>
-            <Button variant='light'  leftSection={<FaAngleDoubleRight/>} onClick={()=>navigate('/leaverequests/view', {state:{'leave_id':row.original.leave_id}})}>Approval</Button>
+            <Button  leftSection={<FaAngleDoubleRight/>} onClick={()=>navigate('/leaves/requests/view', {state:{'leave_id':row.original.leave_id, 'user_login_id':row.original.user_login_id}})}>Review</Button>
           </Group>;
       }
     },

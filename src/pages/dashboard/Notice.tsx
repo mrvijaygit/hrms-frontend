@@ -1,14 +1,15 @@
-import { Grid, Paper, ScrollArea, Title } from "@mantine/core"
+import { Grid, Paper, ScrollArea, Title, useMantineTheme } from "@mantine/core"
 import NoticeCard from "../../components/cards/NoticeCard"
 import { UseDashboard } from "../../contextapi/DashboardContext"
 
 function Notice() {
    const {state} =  UseDashboard();
+   const theme = useMantineTheme();
   return (
     <>
         <Grid.Col span={{base:12, lg:8}}>
             <Paper p='sm' shadow='xs'>
-                <Title order={5} mb='sm'>Announments</Title>
+                <Title order={5} mb='sm' c={theme.primaryColor}>Announments</Title>
                 <ScrollArea h={240}>
                     {
                         state?.notice != null && <>

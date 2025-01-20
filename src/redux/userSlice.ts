@@ -32,7 +32,7 @@ export const userSlice = createSlice({
         },
         logout:(state)=>{
             localStorage.clear();
-            return state = initialState;
+            return state = {...state, ...initialState};
         }
     }
 });

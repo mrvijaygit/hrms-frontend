@@ -1,13 +1,14 @@
-import {Box, Grid, Group, Paper, ScrollArea, Text, Title } from '@mantine/core'
+import {Box, Grid, Group, Paper, ScrollArea, Text, Title, useMantineTheme } from '@mantine/core'
 import { BsPin } from "react-icons/bs";
 import { UseDashboard } from "../../contextapi/DashboardContext"
 function NewHires() {
     const {state} =  UseDashboard();
+    const theme = useMantineTheme();
     return (
         <>
             <Grid.Col span={{base:12, lg:4}}>
                 <Paper p='sm' shadow='xs'>
-                    <Title order={5} mb="sm">New Hires <Text component='small' fz={10} c='dimmed' tt='uppercase' fw={700}>( Last 30 days ) </Text></Title>
+                    <Title order={5} mb="sm" c={theme.primaryColor}>New Hires <Text component='small' fz={10} c='dimmed' tt='uppercase' fw={700}>( Last 30 days ) </Text></Title>
                     <ScrollArea h={240}>
                     {
                         state?.newHires != null && <>

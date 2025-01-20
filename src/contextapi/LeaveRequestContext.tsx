@@ -8,7 +8,8 @@ const initialValues:stateType = {
     show:"10",
     data:[],
     info:"",
-    totalPage:1
+    totalPage:1,
+    viewDetais:null
 }
 
 export default function LeaveRequestContext({children}:PropsWithChildren){

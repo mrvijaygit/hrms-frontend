@@ -1,6 +1,5 @@
-import {Flex, Title, SimpleGrid, Grid, Paper} from "@mantine/core"
+import {Flex, Title, Grid, Paper} from "@mantine/core"
 import AdminCard from "./AdminCard";
-import { FaUsers, FaUserTie, FaUser, FaCalendarCheck, FaHandshake, FaClipboardList} from 'react-icons/fa';
 import { useAppSelector } from "../../redux/hook";
 import { DonutChart } from '@mantine/charts';
 import Notice from "./Notice";

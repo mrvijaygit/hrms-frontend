@@ -6,8 +6,9 @@ export default function LeaveRequestReducer(state:stateType, action:actionType):
             return {...state, show:action.payload}
         case "setPage":
             return {...state, page:action.payload}
-        case "isUpdated":
-            return {...state, is_updated:action.payload.is_updated, editData:action.payload.editData}
+        case "setViewDetais":
+            console.log(action.payload);
+            return {...state, viewDetais:action.payload}
         case "response":
             let data = action.payload.data , info = "", totalPage=0;
              if(data.length == 0){

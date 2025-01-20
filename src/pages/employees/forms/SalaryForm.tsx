@@ -106,8 +106,8 @@ function SalaryForm() {
             </Grid.Col>
             <Grid.Col span={{base:12}}>
               <Group justify='flex-end' gap='sm'>
-                <Button leftSection={<FaXmark/>} color='red' type='button' onClick={() => handleClearReset()}>{state?.employee_salary_id == -1 ? 'Clear' : 'Reset'}</Button>
-                <Button leftSection={<FaFloppyDisk/>} color='green' type='submit'>{state?.employee_salary_id == -1 ? 'Save' : 'Update'}</Button> 
+                <Button leftSection={<FaXmark/>} color='dark.6' type='button' onClick={() => handleClearReset()}>{state?.employee_salary_id == -1 ? 'Clear' : 'Reset'}</Button>
+                <Button leftSection={<FaFloppyDisk/>} type='submit'>{state?.employee_salary_id == -1 ? 'Save' : 'Update'}</Button> 
               </Group>
             </Grid.Col>
           </Grid>

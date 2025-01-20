@@ -1,17 +1,18 @@
-import { Badge, Box, Grid, Group, Paper, ScrollArea, Text, Title } from '@mantine/core'
+import { Badge, Box, Grid, Group, Image, Paper, ScrollArea, Text, Title, useMantineTheme} from '@mantine/core'
 import { BsCake, BsPin } from "react-icons/bs";
-
+import NotFound from "../../assets/images/not_found_birthday.png";
 import { UseDashboard } from "../../contextapi/DashboardContext"
 function TodayBirthday() {
     const {state} =  UseDashboard();
+    const theme = useMantineTheme();
     return (
         <>
             <Grid.Col span={{ lg: 4 }}>
                 <Paper p='sm' shadow='xs'>
-                    <Title order={5} mb="sm">Today Birthday </Title>
+                    <Title order={5} mb="sm" c={theme.primaryColor}>Today Birthday </Title>
                     <ScrollArea h={240}>
                     {
-                        state?.todayBirthday != null && <>
+                        state?.todayBirthday != null ? <>
                             {
                                 state?.todayBirthday.map((item, index)=>{
                                     return  <Box key={item.employee_id} className={`${((index+1) == state?.todayBirthday?.length) ? '' : "border-bottom"}`} py='xs'>
@@ -32,7 +33,7 @@ function TodayBirthday() {
                                 </Box>
                                 })
                             }
-                        </>
+                        </> : <Image src={NotFound} height='230px' fit="contain" opacity={0.3} />
                     }                     
                     </ScrollArea>
                 </Paper>

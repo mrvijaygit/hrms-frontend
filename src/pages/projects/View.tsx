@@ -260,8 +260,8 @@ function View() {
                 </Grid.Col>
                 <Grid.Col span={12}>
                     <Group justify="flex-end" gap='sm'>
-                        <Button  color="red" leftSection={<FaXmark/>} onClick={()=>handleClearReset()}>{formState.isUpdated ? "Reset"  : "Clear"}</Button>
-                        <Button type='submit' color="green" leftSection={<FaFloppyDisk/>}>{formState.isUpdated ? "Update"  : "Save"}</Button>
+                        <Button  color="dark.6" leftSection={<FaXmark/>} onClick={()=>handleClearReset()}>{formState.isUpdated ? "Reset"  : "Clear"}</Button>
+                        <Button type='submit' leftSection={<FaFloppyDisk/>}>{formState.isUpdated ? "Update"  : "Save"}</Button>
                     </Group>
                 </Grid.Col>
             </Grid>
