@@ -152,3 +152,17 @@ table tr th{ white-space: nowrap; text-transform: capitalize; font-weight: norma
 .table-responsive{
   overflow: auto;
 }
+@media screen and (min-width:992px){
+  .sticky-col{
+    position: sticky;
+    left: 0;
+    z-index: 2;
+  }
+  th.sticky-col{
+    background-color: var(--mantine-color-dark-6);
+  }
+  td.sticky-col{
+    background-color: white;
+  }
+}
+

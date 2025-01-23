@@ -1,5 +1,5 @@
 import { useDisclosure } from '@mantine/hooks';
-import { Box, Button, Drawer, Grid, Group,ComboboxData, Pagination, Paper,Select,Text,Textarea,TextInput, Title, NumberInput } from "@mantine/core";
+import { Box, Button, Drawer, Grid, Group,ComboboxData, Pagination, Paper,Select,Text,Textarea,TextInput, Title, NumberInput, UnstyledButton } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {FaEye, FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
 import { Column } from "react-table"
@@ -8,7 +8,7 @@ import { useForm } from "@mantine/form";
 import { protectedApi } from '../../utils/ApiService';
 import { alert } from '../../utils/Alert';
 import { UseProjects } from '../../contextapi/ProjectsContext';
-import type { dataType } from '../../types/Projects';
+import type {ProjectTableType, dataType } from '../../types/Projects';
 import { DatePickerInput } from '@mantine/dates';
 import { sortingType } from '../../types/general';
 import { useNavigate } from 'react-router-dom';
@@ -37,7 +37,7 @@ export default function List() {
       client_id:null,
       project_manager_id: null,
       start_date:null,
-      deadline:null,
+      end_date:null,
       project_status_id:null,
       project_value:''
     },
@@ -47,7 +47,7 @@ export default function List() {
       client_id: (value) => (value != null ? null : "Required"),
       project_manager_id: (value) => (value != null ? null : "Required"),
       project_status_id: (value) => (value != null ? null : "Required"),
-      deadline: (value) => (value != null ? null : "Required"),
+      end_date: (value) => (value != null ? null : "Required"),
       project_value: (value) => (String(value).length > 0 ? null : "Required"),
     }
   });
@@ -120,9 +120,9 @@ export default function List() {
             "project_id":id
           }
         });
-        let deadline = response.data[0]['deadline'];
+        let end_date = response.data[0]['end_date'];
         let start_date = response.data[0]['start_date'];
-        let obj = {...response.data[0], project_status_id:String(response.data[0]['project_status_id']),  start_date: start_date != null ? new Date(start_date) : null, deadline: deadline != null ? new Date(deadline) : null};
+        let obj = {...response.data[0], project_status_id:String(response.data[0]['project_status_id']),  start_date: start_date != null ? new Date(start_date) : null, end_date: end_date != null ? new Date(end_date) : null};
         dispatch({type:"isUpdated", payload:{is_updated:true, editData:obj}});
         form.setValues(obj);
         open();
@@ -170,7 +170,7 @@ export default function List() {
     }
   }
 
-  const columns:Column<dataType>[] = useMemo(() => [
+  const columns:Column<ProjectTableType>[] = useMemo(() => [
     {
       Header:'#',
       accessor:'s_no',
@@ -180,42 +180,67 @@ export default function List() {
     {
       Header:'Name',
       accessor:"project_name",
-      width:150,
-      sortDirection: sort.accessor === 'project_name' ? sort.direction : 'none'
+      width:330,
+      sortDirection: sort.accessor === 'project_name' ? sort.direction : 'none',
+      Cell:({row, value}) => <>
+        <Text mb={2}>{value}</Text>
+        <Text fz={12} c='dimmed' tt='capitalize'>{row.original.client_name}</Text>
+      </>
     },
     {
-      Header:'Client',
-      accessor:"client_name",
-      width:150,
-      sortDirection: sort.accessor === 'client_name' ? sort.direction : 'none'
-    },
-    {
-      Header:'Project Manager',
+      Header:'Manager',
       accessor:"project_manager",
-      width: 150,
-      sortDirection: sort.accessor === 'project_manager' ? sort.direction : 'none'
-    },
-    {
-      Header:'Start Date',
-      accessor:"start_date",
-      width: 150,
-      headerClassName:"text-center",
-      sortDirection: sort.accessor === 'start_date' ? sort.direction : 'none'
-    },
-    {
-      Header:'Deadline',
-      accessor:"deadline",
-      width: 150,
-      headerClassName:"text-center",
-      sortDirection: sort.accessor === 'deadline' ? sort.direction : 'none'
+      width:200,
+      sortDirection: sort.accessor === 'project_manager' ? sort.direction : 'none',
     },
     {
       Header:'Status',
       accessor:"project_status",
       width: 150,
-      headerClassName:"text-center",
       sortDirection: sort.accessor === 'project_status' ? sort.direction : 'none',
       Cell:({row, value}) => <Text fw={500} c={row.original.status_color}>{value}</Text>
+    },
+    {
+      Header:'Start Date',
+      accessor:"start_date",
+      width: 150,
+      sortDirection: sort.accessor === 'start_date' ? sort.direction : 'none',
+    },
+    {
+      Header:'End Date',
+      accessor:"end_date",
+      width: 150,
+      sortDirection: sort.accessor === 'end_date' ? sort.direction : 'none',
+    },
+    {
+      Header:'Members',
+      accessor:"members",
+      width: 150,
+      disableSortBy:true,
+      headerClassName:"text-center",
+      Cell:({value}) => <>
+        <Button variant='light' onClick={()=>{}}>{value}</Button>
+      </>
+    },
+    {
+      Header:'Tasks',
+      accessor:"tasks",
+      width: 150,
+      disableSortBy:true,
+      headerClassName:"text-center",
+      Cell:({value}) => <>
+        <Button variant='light' onClick={()=>{}}>{value}</Button>
+      </>
+    },
+    {
+      Header:'Work Done',
+      accessor:"work_done",
+      width: 150,
+      disableSortBy:true,
+      headerClassName:"text-center",
+      Cell:({value}) => <>
+        <Button variant='light' onClick={()=>{}}>{value}</Button>
+      </>
     },
     {
       Header:'Action',
@@ -236,7 +261,7 @@ export default function List() {
     },
   ], [sort]);
 
-  const data:dataType[] = useMemo(()=>state.data, [state.data]);
+  const data:ProjectTableType[] = useMemo(()=>state.data, [state.data]);
 
   const columnHeaderClick = async (column:any) => {
  
@@ -295,7 +320,7 @@ export default function List() {
                 <DatePickerInput label="Start Date" {...form.getInputProps("start_date")}/>
               </Grid.Col>
               <Grid.Col span={6}>
-                <DatePickerInput label="Deadline" {...form.getInputProps("deadline")}/>
+                <DatePickerInput label="End Date" {...form.getInputProps("end_date")}/>
               </Grid.Col>
               <Grid.Col span={6}>
                 <Select label="Status" data={projectStatus} {...form.getInputProps("project_status_id")}/>

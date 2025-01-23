@@ -52,8 +52,10 @@ function SideBar() {
       icon: <FaClipboardList/>,
       initiallyOpened: locationUrl.includes('/projects/'),
       group: [
-        { label: 'Clients Management', link: '/projects/clientsManagement', id:11, access:[1000,100]},
+        { label: 'Clients', link: '/projects/clients', id:11, access:[1000,100]},
         { label: 'Project List', link: '/projects/list', id:12, access:[1000,100, 20, 1]},
+        { label: 'Team', link: '/projects/team', id:13, access:[1000,100, 20, 1]},
+        { label: 'Tasks', link: '/projects/tasks', id:14, access:[1000,100, 20, 1]},
       ],
       group_access:[1000,100, 20, 1]
     },
@@ -62,7 +64,7 @@ function SideBar() {
       icon: <FaMoneyBill/>,
       initiallyOpened: locationUrl.includes('/payroll/'),
       group: [
-        { label: 'Payroll List', link: '/payroll', id:14, access:[1000,100, 20, 1]}
+        { label: 'Payroll List', link: '/payroll', id:15, access:[1000,100, 20, 1]}
       ],
       group_access:[1000,100, 20, 1]
     },

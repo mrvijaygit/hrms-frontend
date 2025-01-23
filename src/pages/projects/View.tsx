@@ -162,8 +162,8 @@ function View() {
                     <Text fw={500}>{data?.basic.start_date}</Text>
                 </Grid.Col>
                 <Grid.Col span={{lg:3, md:6}}>
-                    <Text fz='xs' tt='uppercase' c='dark.3'>Deadline</Text>
-                    <Text fw={500}>{data?.basic.deadline}</Text>
+                    <Text fz='xs' tt='uppercase' c='dark.3'>End Date</Text>
+                    <Text fw={500}>{data?.basic.end_date}</Text>
                 </Grid.Col>
                 {
                     !isEmployee && <Grid.Col span={{lg:3, md:6}}>

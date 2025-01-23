@@ -13,7 +13,7 @@ import type { dataType } from '../../types/Clients';
 
 type sortingType = { direction: string, accessor: string};
 
-export default function LeaveType() {
+export default function Clients() {
   const [tableHeight, setTableHeight] = useState<number>(400);
   const topRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);

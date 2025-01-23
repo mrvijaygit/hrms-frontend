@@ -10,16 +10,23 @@ export type dataType = {
     project_manager_id: string | null;
     project_manager?:string;
     start_date: Date | null;
-    deadline: Date | null;
+    end_date: Date | null;
     project_value:string | number;
     project_status_id:string | null;
     project_status?:string;
     status_color?:string;
     department_name?:string;
 }
+export type ProjectTableType = Omit<dataType, 'start_date' | 'end_date'> & {
+    start_date:string; 
+    end_date:string;
+    members:number;
+    tasks:number;
+    work_done:number;
+}
 
 export interface stateType{
-    data:dataType[] | [],
+    data:ProjectTableType[] | [],
     show:string | null,
     page:number,
     totalPage:number,
@@ -28,8 +35,10 @@ export interface stateType{
     editData:dataType | null,
 }
 
+
+
 export type actionType = {type:"setPage", payload:number} | {type:"setShow", payload:string | null} 
-| {type:"response", payload:{data:dataType[], totalRecord:number}} | {type:"isUpdated", payload:{
+| {type:"response", payload:{data:ProjectTableType[], totalRecord:number}} | {type:"isUpdated", payload:{
     is_updated:boolean,
     editData:dataType | null
 }};
@@ -52,6 +61,8 @@ export type TeamFormStateType = {
     editData:TeamMemberFormType | null
 }
 
+
+
 type TeamMemberType = Omit<TeamMemberFormType, 'start_date' | 'end_date'> & {
     start_date:string; 
     end_date:string;
@@ -61,8 +72,8 @@ type TeamMemberType = Omit<TeamMemberFormType, 'start_date' | 'end_date'> & {
 }
 
 export interface ProjectDetailsType{
-    basic:Omit<dataType, 'start_date' | 'deadline'> & { start_date:string; 
-        deadline:string;
+    basic:Omit<dataType, 'start_date' | 'end_date'> & { start_date:string; 
+        end_date:string;
     },
     teamMembers:TeamMemberType[]
 }
