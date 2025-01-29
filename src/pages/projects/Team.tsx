@@ -13,7 +13,7 @@ import { useAppSelector } from '../../redux/hook';
 import { useLocation } from 'react-router-dom';
 type sortingType = { direction: string, accessor: string};
 
-export default function Team() {
+export default function Tasks() {
   
   const logger_user_login_id = useAppSelector(state => state.user.user_login_id);
   const location = useLocation();
@@ -67,10 +67,8 @@ export default function Team() {
             selected_id: location.state != null ?  location.state.project_id : null
           }
         });
-        console.log(projectResponse.data.selected_id);
         dispatch({type:"filter", payload:{'key':"project_id",'value':projectResponse.data.selected_id}})
         setProjects(projectResponse.data.data);
-        console.log('prev')
         let response = await protectedApi.get('/master/userList', {
             params:{
               reporting_id: logger_user_login_id
@@ -182,13 +180,19 @@ export default function Team() {
       Header:'Timesheet Entries',
       accessor:"timesheet_entries",
       width: 250,
-      sortDirection: sort.accessor === 'timesheet_entries' ? sort.direction : 'none'
+      disableSortBy:true,
+      headerClassName:"text-center",
+      sortDirection: sort.accessor === 'timesheet_entries' ? sort.direction : 'none',
+      Cell:({value}) => <Button variant='light' onClick={()=>{}}>{value}</Button>
     },
     {
       Header:'Timesheet Hours',
       accessor:"timesheet_hours",
       width: 250,
-      sortDirection: sort.accessor === 'timesheet_hours' ? sort.direction : 'none'
+      disableSortBy:true,
+      headerClassName:"text-center",
+      sortDirection: sort.accessor === 'timesheet_hours' ? sort.direction : 'none',
+      Cell:({value}) => <Button variant='light' onClick={()=>{}}>{value}</Button>
     },
     {
       Header:'Action',

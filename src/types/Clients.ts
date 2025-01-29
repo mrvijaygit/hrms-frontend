@@ -1,7 +1,4 @@
-import { Dispatch } from "react";
-
-export type dataType = {
-    s_no?:number;
+export interface FormType {
     client_id:number;
     client_name:string;
     contact_person_name:string;
@@ -9,23 +6,6 @@ export type dataType = {
     email_id: string;
 }
 
-export interface stateType{
-    data:dataType[] | [],
-    show:string | null,
-    page:number,
-    totalPage:number,
-    info:string,
-    is_updated:boolean,
-    editData:dataType | null,
-}
-
-export type actionType = {type:"setPage", payload:number} | {type:"setShow", payload:string | null} 
-| {type:"response", payload:{data:dataType[], totalRecord:number}} | {type:"isUpdated", payload:{
-    is_updated:boolean,
-    editData:dataType | null
-}};
-
-export type ContextType = {
-    state:stateType,
-    dispatch:Dispatch<actionType>
+export interface TableDataType extends FormType{
+    s_no:number;
 }

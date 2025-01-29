@@ -1,16 +1,17 @@
 import { useDisclosure } from '@mantine/hooks';
-import { Box, Button, Drawer, Grid, Group,ComboboxData, Pagination, Paper,Select,Text,Textarea,TextInput, Title, NumberInput, UnstyledButton } from "@mantine/core";
+import { Box, Button, Drawer, Grid, Group,ComboboxData, Pagination, Paper,Select,Text,Textarea,TextInput, Title, NumberInput } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import {FaEye, FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
+import {FaEye, FaFileExcel, FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
 import { useForm } from "@mantine/form";
 import { protectedApi } from '../../utils/ApiService';
 import { alert } from '../../utils/Alert';
-import { UseProjects } from '../../contextapi/ProjectsContext';
-import type {ProjectTableType, dataType } from '../../types/Projects';
+import { UseProjects } from '../../contextapi/GenericContext';
+import type {TableDataType, FormType } from '../../types/Projects';
+import { excelDownload , directionAccessor} from '../../utils/helper';
 import { DatePickerInput } from '@mantine/dates';
-import { sortingType } from '../../types/general';
+import { SortingType } from '../../types/Generic';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from "../../redux/hook";
 
@@ -23,13 +24,13 @@ export default function List() {
   const [opened, { open, close }] = useDisclosure(false);
   const [triggerApi, setTriggerApi] = useState<Boolean>(true);
   const {state, dispatch}  = UseProjects();
-  const [sort, setSort] = useState({} as sortingType);
+  const [sort, setSort] = useState({} as SortingType);
 
   const [projectStatus, setProjectStatus] = useState<ComboboxData>([]);
   const [clients, setClients] = useState<ComboboxData>([]);
   const [managers, setManagers] = useState<ComboboxData>([]);
 
-  const form = useForm<dataType>({
+  const form = useForm<FormType>({
     initialValues:{
       project_id:-1,
       project_name:"",
@@ -141,7 +142,7 @@ export default function List() {
     }
   } 
 
-  const handleSubmit = async(values:dataType) =>{
+  const handleSubmit = async(values:FormType) =>{
     try{
       let promise = await protectedApi.post("/project/saveProject", JSON.stringify(values));
       alert.success(promise.data.msg);
@@ -170,7 +171,7 @@ export default function List() {
     }
   }
 
-  const columns:Column<ProjectTableType>[] = useMemo(() => [
+  const columns:Column<TableDataType>[] = useMemo(() => [
     {
       Header:'#',
       accessor:'s_no',
@@ -261,21 +262,10 @@ export default function List() {
     },
   ], [sort]);
 
-  const data:ProjectTableType[] = useMemo(()=>state.data, [state.data]);
+  const data:TableDataType[] = useMemo(()=>state.data, [state.data]);
 
   const columnHeaderClick = async (column:any) => {
- 
-    switch (column.sortDirection) {
-      case 'none':
-        setSort({ direction: 'ASC', accessor: column.id });
-        break;
-      case 'ASC':
-        setSort({ direction: 'DESC', accessor: column.id });
-        break;
-      case 'DESC':
-        setSort({ direction: 'none', accessor: column.id });
-        break;
-    }
+    setSort(directionAccessor(column));
   };
 
   return (
@@ -283,13 +273,13 @@ export default function List() {
       <Paper p='xs' mb='xs' shadow='xs' ref={topRef}>
         <Group align="center" justify="space-between" gap='xs'>
           <Title order={6} tt='uppercase'>Projects</Title>
-
-          {
-            [1000,100].includes(userInfo.m_user_type_id) &&    <Group align="center" gap='xs'>
-            <Button leftSection={<FaPlus/>} onClick={open}>Add Project</Button>
+          <Group align="center" gap='xs'>
+            {
+              [1000,100].includes(userInfo.m_user_type_id) &&
+              <Button leftSection={<FaPlus/>} onClick={open}>Add Project</Button>
+            }
+            <Button leftSection={<FaFileExcel/>} color='green' onClick={()=>excelDownload("projects")}>Excel</Button>
           </Group>
-          }
-       
         </Group>
       </Paper>
       <Paper p='xs' shadow="xs" my='xs'>

@@ -1,17 +1,16 @@
 import { useDisclosure } from '@mantine/hooks';
 import { Box, Button, Drawer, Grid, Group, NumberInput, Pagination, Paper,Select,Text,TextInput, Title } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import {FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
+import {FaFileExcel, FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
 import { useForm } from "@mantine/form";
 import { protectedApi } from '../../utils/ApiService';
 import { alert } from '../../utils/Alert';
-import { UseClients } from '../../contextapi/ClientsContext';
-import type { dataType } from '../../types/Clients';
-
-
-type sortingType = { direction: string, accessor: string};
+import { UseClients } from '../../contextapi/GenericContext';
+import { excelDownload , directionAccessor} from '../../utils/helper';
+import type { SortingType } from '../../types/Generic';
+import type { FormType, TableDataType } from '../../types/Clients';
 
 export default function Clients() {
   const [tableHeight, setTableHeight] = useState<number>(400);
@@ -20,9 +19,9 @@ export default function Clients() {
   const [opened, { open, close }] = useDisclosure(false);
   const [triggerApi, setTriggerApi] = useState<Boolean>(true);
   const {state, dispatch}  = UseClients();
-  const [sort, setSort] = useState({} as sortingType);
+  const [sort, setSort] = useState({} as SortingType);
 
-  const form = useForm<dataType>({
+  const form = useForm<FormType>({
     initialValues:{
       client_id:-1,
       client_name:"",
@@ -105,7 +104,7 @@ export default function Clients() {
     }
   } 
 
-  const handleSubmit = async(values:dataType) =>{
+  const handleSubmit = async(values:FormType) =>{
     try{
       let promise = await protectedApi.post("/project/saveClient", JSON.stringify(values));
       alert.success(promise.data.msg);
@@ -134,7 +133,7 @@ export default function Clients() {
     }
   }
 
-  const columns:Column<dataType>[] = useMemo(() => [
+  const columns:Column<TableDataType>[] = useMemo(() => [
     {
       Header:'#',
       accessor:'s_no',
@@ -178,21 +177,10 @@ export default function Clients() {
     },
   ], [sort]);
 
-  const data:dataType[] = useMemo(()=>state.data, [state.data]);
+  const data:TableDataType[] = useMemo(()=>state.data, [state.data]);
 
   const columnHeaderClick = async (column:any) => {
- 
-    switch (column.sortDirection) {
-      case 'none':
-        setSort({ direction: 'ASC', accessor: column.id });
-        break;
-      case 'ASC':
-        setSort({ direction: 'DESC', accessor: column.id });
-        break;
-      case 'DESC':
-        setSort({ direction: 'none', accessor: column.id });
-        break;
-    }
+    setSort(directionAccessor(column));
   };
 
   return (
@@ -202,6 +190,7 @@ export default function Clients() {
           <Title order={6} tt='uppercase'>Clients</Title>
           <Group align="center" gap='xs'>
             <Button leftSection={<FaPlus/>} onClick={open}>Add Client</Button>
+            <Button leftSection={<FaFileExcel/>} color='green' onClick={()=>excelDownload("clients")}>Excel</Button>
           </Group>
         </Group>
       </Paper>

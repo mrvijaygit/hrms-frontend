@@ -1,51 +1,26 @@
-import { Dispatch } from "react";
-
-export type dataType = {
-    s_no?:number;
+export type FormType = {
     project_id:number;
     project_name:string;
     project_description:string;
     client_id:string | null;
-    client_name?:string;
     project_manager_id: string | null;
-    project_manager?:string;
     start_date: Date | null;
     end_date: Date | null;
     project_value:string | number;
     project_status_id:string | null;
-    project_status?:string;
-    status_color?:string;
-    department_name?:string;
 }
-export type ProjectTableType = Omit<dataType, 'start_date' | 'end_date'> & {
+export type TableDataType = Omit<FormType, 'start_date' | 'end_date'> & {
+    s_no:number;
     start_date:string; 
     end_date:string;
     members:number;
     tasks:number;
     work_done:number;
-}
-
-export interface stateType{
-    data:ProjectTableType[] | [],
-    show:string | null,
-    page:number,
-    totalPage:number,
-    info:string,
-    is_updated:boolean,
-    editData:dataType | null,
-}
-
-
-
-export type actionType = {type:"setPage", payload:number} | {type:"setShow", payload:string | null} 
-| {type:"response", payload:{data:ProjectTableType[], totalRecord:number}} | {type:"isUpdated", payload:{
-    is_updated:boolean,
-    editData:dataType | null
-}};
-
-export type ContextType = {
-    state:stateType,
-    dispatch:Dispatch<actionType>
+    project_status:string;
+    status_color:string;
+    department_name:string;
+    project_manager:string;
+    client_name:string;
 }
 
 export type TeamMemberFormType = {
@@ -61,8 +36,6 @@ export type TeamFormStateType = {
     editData:TeamMemberFormType | null
 }
 
-
-
 type TeamMemberType = Omit<TeamMemberFormType, 'start_date' | 'end_date'> & {
     start_date:string; 
     end_date:string;
@@ -72,8 +45,6 @@ type TeamMemberType = Omit<TeamMemberFormType, 'start_date' | 'end_date'> & {
 }
 
 export interface ProjectDetailsType{
-    basic:Omit<dataType, 'start_date' | 'end_date'> & { start_date:string; 
-        end_date:string;
-    },
+    basic:Omit<TableDataType, 's_no'>,
     teamMembers:TeamMemberType[]
 }

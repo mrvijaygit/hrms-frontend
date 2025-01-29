@@ -1,35 +1,30 @@
 import { useDisclosure } from '@mantine/hooks';
-import { Box, Button, Drawer, Grid, Group, Pagination, Paper,Select,Text,TextInput, Title } from "@mantine/core";
+import { Box, Button, ComboboxData, Drawer, Grid, Group, Pagination, Paper,Select,Text,TextInput, Title } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import {FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
+import {FaFileExcel, FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
 import { useForm } from "@mantine/form";
 import { DatePickerInput } from '@mantine/dates';
 import { protectedApi } from '../../utils/ApiService';
 import { alert } from '../../utils/Alert';
-import { UseHoliday } from '../../contextapi/HolidayContext';
-
-type dataType = {
-  s_no?:number;
-  holiday_id:number;
-  holiday_title:string;
-  holiday_date:Date | null;
-  holiday_day?:string
-}
-
-type sortingType = { direction: string, accessor: string};
+import { UseHoliday } from '../../contextapi/GenericContext';
+import { excelDownload , directionAccessor} from '../../utils/helper';
+import type { SortingType } from '../../types/Generic';
+import type { FormType, TableDataType } from '../../types/Holiday';
 
 export default function Holidays() {
   const [tableHeight, setTableHeight] = useState<number>(400);
   const topRef = useRef<HTMLDivElement | null>(null);
+  const filterRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [triggerApi, setTriggerApi] = useState<Boolean>(true);
   const {state, dispatch}  = UseHoliday();
-  const [sort, setSort] = useState({} as sortingType);
+  const [sort, setSort] = useState({} as SortingType);
+  const [year, setYear] = useState<ComboboxData | null>(null);
 
-  const form = useForm<dataType>({
+  const form = useForm<FormType>({
     initialValues:{
       holiday_id:-1,
       holiday_title:'',
@@ -44,8 +39,8 @@ export default function Holidays() {
   useLayoutEffect(() => {
     const calculateTableHeight = () => {
       let h1 = 0;
-      if (topRef.current) {
-        h1 =  topRef.current.clientHeight + 58 + 56; 
+      if (topRef.current && filterRef.current) {
+        h1 =  topRef.current.clientHeight + filterRef.current.clientHeight + 58 + 56; 
         if(bottomRef.current){
           h1 += bottomRef.current.clientHeight;
         }
@@ -63,24 +58,44 @@ export default function Holidays() {
   useEffect(()=>{
     (async()=>{
       try{
-        let response = await protectedApi.get("/leave/holiday", {
-          params:{
-            currentpage:state.page,
-            postperpage:Number(state.show),
-            sorting:sort
-          }
-        });
-        dispatch({type:"response", payload:{
-          data:response.data.data,
-          totalRecord:response.data.totalRecord
-        }});
+        const response = await protectedApi.get("/master/leaveYear");
+        if(response.data.length > 0){
+          let _obj = response.data.filter((obj:any) => obj.selected == 1)[0];
+          setYear(response.data);
+          console.log(_obj);
+          dispatch({type:"filter", payload:{"key":"m_year_id", "value":_obj.value}});
+        }
       }
-      catch(err){
+      catch(err:any){
+        alert.error(err, true);
+      }
+    })();
+  },[triggerApi]);
 
-      }
-    })()
+  useEffect(()=>{
+    if(state.filter?.m_year_id != null){
+      (async()=>{
+        try{
+          let response = await protectedApi.get("/leave/holiday", {
+            params:{
+              currentpage:state.page,
+              postperpage:Number(state.show),
+              sorting:sort,
+              filter:state.filter
+            },
+          });
+          dispatch({type:"response", payload:{
+            data:response.data.data,
+            totalRecord:response.data.totalRecord
+          }});
+        }
+        catch(err){
   
-  },[state.page, state.show, triggerApi, sort]);
+        }
+      })();
+    }
+  
+  },[state.page, state.show, triggerApi, sort, state.filter?.m_year_id]);
 
   const handleEdit = async(id:number) =>{
       try{
@@ -108,7 +123,7 @@ export default function Holidays() {
     }
   } 
 
-  const handleSubmit = async(values:dataType) =>{
+  const handleSubmit = async(values:FormType) =>{
     try{
       let promise = await protectedApi.post("/leave/saveHoliday", JSON.stringify(values));
       alert.success(promise.data.msg);
@@ -137,7 +152,7 @@ export default function Holidays() {
     }
   }
 
-  const columns:Column<dataType>[] = useMemo(() => [
+  const columns:Column<TableDataType>[] = useMemo(() => [
     {
       Header:'#',
       accessor:'s_no',
@@ -175,21 +190,10 @@ export default function Holidays() {
     },
   ], [sort]);
 
-  const data:dataType[] = useMemo(()=>state.data, [state.data]);
+  const data:TableDataType[] = useMemo(()=>state.data, [state.data]);
 
   const columnHeaderClick = async (column:any) => {
- 
-    switch (column.sortDirection) {
-      case 'none':
-        setSort({ direction: 'ASC', accessor: column.id });
-        break;
-      case 'ASC':
-        setSort({ direction: 'DESC', accessor: column.id });
-        break;
-      case 'DESC':
-        setSort({ direction: 'none', accessor: column.id });
-        break;
-    }
+    setSort(directionAccessor(column));
   };
 
   return (
@@ -199,9 +203,20 @@ export default function Holidays() {
           <Title order={6} tt='uppercase'>Holiday</Title>
           <Group align="center" gap='xs'>
             <Button leftSection={<FaPlus/>} onClick={open}>Add Holiday</Button>
+            <Button leftSection={<FaFileExcel/>} color='green' onClick={()=>excelDownload("holiday", state?.filter)}>Excel</Button>
           </Group>
         </Group>
       </Paper>
+      
+      <Paper p='xs' shadow='xs' mb='xs' ref={filterRef}>
+        <Grid gutter={{lg:"xs"}}>
+          <Grid.Col span={{lg:2, md:3}}>
+            <Select label='Year' data={year != null ? year :  []} size='xs' value={state?.filter?.m_year_id}
+            onChange={(value) => dispatch({'type':'filter', payload:{'key':'m_year_id',"value":value}})}/>
+          </Grid.Col>
+        </Grid>
+      </Paper>
+      
       <Paper p='xs' shadow="xs" my='xs'>
         <Box style={{'overflow':'auto'}} h={tableHeight}>
             <BasicTable columns={columns} data={data} onHeaderClick= {columnHeaderClick}/>

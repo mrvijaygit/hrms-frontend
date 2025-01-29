@@ -1,17 +1,16 @@
 import { useDisclosure } from '@mantine/hooks';
 import { Box, Button, Drawer, Grid, Group, NumberInput, Pagination, Paper,Select,Text,TextInput, Title } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
+import { FaFileExcel, FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
 import { useForm } from "@mantine/form";
 import { protectedApi } from '../../utils/ApiService';
 import { alert } from '../../utils/Alert';
-import { UseLeaveType } from '../../contextapi/LeaveTypeContext';
-import type { dataType } from '../../types/LeaveType';
-
-
-type sortingType = { direction: string, accessor: string};
+import { UseLeaveType } from '../../contextapi/GenericContext';
+import { excelDownload , directionAccessor} from '../../utils/helper';
+import type { SortingType } from '../../types/Generic';
+import type { FormType, TableDataType } from '../../types/LeaveType';
 
 export default function LeaveType() {
   const [tableHeight, setTableHeight] = useState<number>(400);
@@ -20,9 +19,9 @@ export default function LeaveType() {
   const [opened, { open, close }] = useDisclosure(false);
   const [triggerApi, setTriggerApi] = useState<Boolean>(true);
   const {state, dispatch}  = UseLeaveType();
-  const [sort, setSort] = useState({} as sortingType);
+  const [sort, setSort] = useState({} as SortingType);
 
-  const form = useForm<dataType>({
+  const form = useForm<FormType>({
     initialValues:{
       m_leave_type_id:-1,
       leave_type:'',
@@ -100,7 +99,7 @@ export default function LeaveType() {
     }
   } 
 
-  const handleSubmit = async(values:dataType) =>{
+  const handleSubmit = async(values:FormType) =>{
     try{
       let promise = await protectedApi.post("/leave/saveLeaveType", JSON.stringify(values));
       alert.success(promise.data.msg);
@@ -129,7 +128,7 @@ export default function LeaveType() {
     }
   }
 
-  const columns:Column<dataType>[] = useMemo(() => [
+  const columns:Column<TableDataType>[] = useMemo(() => [
     {
       Header:'#',
       accessor:'s_no',
@@ -161,21 +160,10 @@ export default function LeaveType() {
     },
   ], [sort]);
 
-  const data:dataType[] = useMemo(()=>state.data, [state.data]);
+  const data:TableDataType[] = useMemo(()=>state.data, [state.data]);
 
   const columnHeaderClick = async (column:any) => {
- 
-    switch (column.sortDirection) {
-      case 'none':
-        setSort({ direction: 'ASC', accessor: column.id });
-        break;
-      case 'ASC':
-        setSort({ direction: 'DESC', accessor: column.id });
-        break;
-      case 'DESC':
-        setSort({ direction: 'none', accessor: column.id });
-        break;
-    }
+    setSort(directionAccessor(column));
   };
 
   return (
@@ -185,6 +173,7 @@ export default function LeaveType() {
           <Title order={6} tt='uppercase'>Leave Type</Title>
           <Group align="center" gap='xs'>
             <Button leftSection={<FaPlus/>} onClick={open}>Add Leave Type</Button>
+            <Button leftSection={<FaFileExcel/>} color='green' onClick={()=>excelDownload("leaveType")}>Excel</Button>
           </Group>
         </Group>
       </Paper>

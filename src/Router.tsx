@@ -9,11 +9,8 @@ import Layout from './components/layout/Layout';
 import DashboardContext from "./contextapi/DashboardContext";
 import EmployeeFormContext from "./contextapi/EmployeeFormContext";
 import EmployeeListContext from "./contextapi/EmployeeListContext";
-import HolidayContext from './contextapi/HolidayContext';
-import LeaveTypeContext from './contextapi/LeaveTypeContext';
+import { HolidayContext, LeaveTypeContext , ClientsContext, ProjectsContext, TasksContext, ARecordContext} from './contextapi/GenericContext';
 import NoticeContext from './contextapi/NoticeContext';
-import ClientsContext from './contextapi/ClientsContext';
-import ProjectsContext from './contextapi/ProjectsContext';
 import AttendanceContent from './contextapi/AttendanceContent';
 import PayrollContext from './contextapi/PayrollContext';
 import LeaveRequestContext from './contextapi/LeaveRequestContext';
@@ -31,14 +28,14 @@ const MyLeaves = lazy(()=> import('./pages/leaves/MyLeaves'));
 const LeavesRequests = lazy(()=> import('./pages/leaves/Requests'));
 const LeavesRequestsView = lazy(()=> import('./pages/leaves/View'));
 
-
 const AttendanceList = lazy(()=> import('./pages/attendance/List'));
-const AttendanceOverallReport = lazy(()=> import('./pages/attendance/OverallReport'));
+const AttendanceRecords = lazy(()=> import('./pages/attendance/AttendanceRecords'));
 
 const Clients = lazy(()=> import('./pages/projects/Clients'));
 const ProjectsList = lazy(()=> import('./pages/projects/List'));
 const ProjectView = lazy(()=> import('./pages/projects/View'));
 const Team = lazy(()=> import('./pages/projects/Team'));
+const Tasks = lazy(()=> import('./pages/projects/Tasks'));
 
 const GeneratePayslip = lazy(()=> import('./pages/payroll/GeneratePayslip'));
 const PayrollList = lazy(()=> import('./pages/payroll/List'));
@@ -67,12 +64,13 @@ export default function Router(){
                 <Route path='/leaves/requests/view' element={<RequiredAuth m_user_type_id={[1000, 100, 20]}><LeavesRequestsView/></RequiredAuth>} />
 
                 <Route path='/attendance/list' element={<RequiredAuth m_user_type_id={[1000, 100,20,1]}><AttendanceContent><AttendanceList /></AttendanceContent></RequiredAuth>} />
-                <Route path='/attendance/report' element={<RequiredAuth m_user_type_id={[1000, 100]}><AttendanceOverallReport /></RequiredAuth>} />
+                <Route path='/attendance/report' element={<RequiredAuth m_user_type_id={[1000, 100]}> <ARecordContext><AttendanceRecords /></ARecordContext></RequiredAuth>} />
 
                 <Route path='/projects/clients' element={<RequiredAuth m_user_type_id={[1000, 100]}><ClientsContext><Clients /></ClientsContext></RequiredAuth>} />
                 <Route path='/projects/list' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><ProjectsContext><ProjectsList /></ProjectsContext></RequiredAuth>} />
                 <Route path='/projects/view' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><ProjectView /></RequiredAuth>} />
                 <Route path='/projects/team' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><TeamContext><Team/></TeamContext></RequiredAuth>} />
+                <Route path='/projects/tasks' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><TasksContext><Tasks/></TasksContext></RequiredAuth>} />
 
                 <Route path='/payroll/generatePayslip' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><GeneratePayslip /></RequiredAuth>} />
                 <Route path='/payroll' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><PayrollContext><PayrollList /></PayrollContext></RequiredAuth>} />
