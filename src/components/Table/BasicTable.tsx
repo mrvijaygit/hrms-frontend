@@ -33,8 +33,8 @@ function TableComponent<T extends object>({columns, data, onHeaderClick}:TablePr
                                 }
                                 else{
                                     return  <Table.Th className={column?.headerClassName || ""} {...column.getHeaderProps(column.getSortByToggleProps())} key={index} style={{width:`${column.width}px`}} 
-                                    onClick={() => onHeaderClick(column)}>
-                                      <Box className={`table-sorting ${column.canSort ? "active" : ""}`} data-sort={column?.sortDirection || ""}>{column.render('Header')}</Box>
+                                    onClick={() => { rows.length > 1 ? onHeaderClick(column) : {}}}>
+                                      <Box className={`table-sorting ${(rows.length > 1 && column.canSort) ? "active" : ""}`} data-sort={column?.sortDirection || ""}>{column.render('Header')}</Box>
                                     </Table.Th>
                                 }
                               

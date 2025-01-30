@@ -26,7 +26,7 @@ function Filter() {
     <>
         <Grid gutter='xs'>
             <Grid.Col span={{lg:3, md:6}}>
-              <DatePickerInput label="Attendance Date" size="xs" clearable 
+              <DatePickerInput label="Attendance Date" size="xs" maxDate={new Date()} clearable 
               value={state.filter.attendance_date} 
               onChange={(value) => dispatch({type:"filter", payload:{'key':"attendance_date",'value':value}})}/>
             </Grid.Col>

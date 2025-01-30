@@ -13,7 +13,7 @@ const initialValues:stateType = {
     editData:null,
     status:null,
     filter:{
-        attendance_date:null,
+        attendance_date:new Date(),
         m_attendance_status_id:null,
     }
 }

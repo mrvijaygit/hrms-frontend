@@ -1,17 +1,18 @@
 import {Flex, Title, Grid, Paper} from "@mantine/core"
-import AdminCard from "./AdminCard";
 import { useAppSelector } from "../../redux/hook";
 import { DonutChart } from '@mantine/charts';
-import Notice from "./Notice";
-import { useEffect } from "react";
+import { lazy, useEffect } from "react";
 import { alert } from "../../utils/Alert";
 import { protectedApi } from "../../utils/ApiService";
 import { UseDashboard } from "../../contextapi/DashboardContext";
-import UpcomingHolidays from "./UpcomingHolidays";
-import TodayBirthday from "./TodayBirthday";
-import NewHires from "./NewHires";
-import WorkAnniversary from "./WorkAnniversary";
 
+const Punch = lazy(()=>import("./Punch"));
+const AdminCard = lazy(()=>import("./AdminCard"));
+const UpcomingHolidays = lazy(()=>import("./UpcomingHolidays"));
+const TodayBirthday = lazy(()=>import("./TodayBirthday"));
+const NewHires = lazy(()=>import("./NewHires"));
+const WorkAnniversary = lazy(()=>import("./WorkAnniversary"));
+const Notice = lazy(()=>import("./Notice"));
 
 function Dashboard() {
   const userInfo = useAppSelector(state => state.user);
@@ -44,6 +45,7 @@ function Dashboard() {
          </Flex>
       </Paper>
       <Grid gutter='xs' align="stretch"> 
+        <Punch/>
         {
           [1000,100].includes(userInfo.m_user_type_id) &&  <>
           

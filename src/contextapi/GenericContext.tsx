@@ -5,7 +5,7 @@ import type {TableDataType as LeaveTypeTableDataType, FormType as LeaveTypeFormT
 import type {TableDataType as ClientsTableDataType, FormType as ClientsFormType} from "../types/Clients";
 import type {TableDataType as ProjectsTableDataType, FormType as ProjectsFormType} from "../types/Projects";
 import type {TableDataType as TasksTableDataType, FormType as TasksFormType, FilterType as TasksFilterType} from "../types/Tasks";
-import type {TableDataType as ARecordTableDataType, FilterType as ARecordFilterType} from "../types/AttendanceRecord";
+import type {TableDataType as AReportTableDataType, FilterType as AReportFilterType} from "../types/AttendanceRecord";
 
 import GenericReducer from "../reducers/GenericReducer";
 
@@ -14,7 +14,7 @@ const LeaveType = createContext({} as ContextType<LeaveTypeTableDataType, LeaveT
 const Clients = createContext({} as ContextType<ClientsTableDataType, ClientsFormType>);
 const Projects = createContext({} as ContextType<ProjectsTableDataType, ProjectsFormType>);
 const Tasks = createContext({} as ContextType<TasksTableDataType, TasksFormType, TasksFilterType>);
-const ARecord = createContext({} as ContextType<ARecordTableDataType, {}, ARecordFilterType>);
+const AReport = createContext({} as ContextType<AReportTableDataType, {}, AReportFilterType>);
 
 const HolidayInitialValues:TState<HolidayTableDataType, HolidayFormType, HolidayFilterType> = {
     page:1,
@@ -73,7 +73,7 @@ const TasksInitialValues:TState<TasksTableDataType, TasksFormType, TasksFilterTy
     }
 }
 
-const ARecordInitialValues:TState<ARecordTableDataType, {}, ARecordFilterType> = {
+const AReportInitialValues:TState<AReportTableDataType, {}, AReportFilterType> = {
     page:1,
     show:"10",
     data:[],
@@ -111,9 +111,9 @@ export function TasksContext({children}:PropsWithChildren){
     return <Tasks.Provider value={{state, dispatch}}>{children}</Tasks.Provider>
 }
 
-export function ARecordContext({children}:PropsWithChildren){
-    const [state, dispatch] = useReducer(GenericReducer<ARecordTableDataType, {}, ARecordFilterType>, ARecordInitialValues);
-    return <ARecord.Provider value={{state, dispatch}}>{children}</ARecord.Provider>
+export function AReportContext({children}:PropsWithChildren){
+    const [state, dispatch] = useReducer(GenericReducer<AReportTableDataType, {}, AReportFilterType>, AReportInitialValues);
+    return <AReport.Provider value={{state, dispatch}}>{children}</AReport.Provider>
 }
 
 export const UseHoliday = () => useContext(Holiday);
@@ -121,4 +121,4 @@ export const UseLeaveType = () => useContext(LeaveType);
 export const UseClients = () => useContext(Clients);
 export const UseProjects = () => useContext(Projects);
 export const UseTasks = () => useContext(Tasks);
-export const UseARecord = () => useContext(ARecord);
+export const UseAReport = () => useContext(AReport);

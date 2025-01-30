@@ -5,19 +5,20 @@ import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
 import { MonthPickerInput } from '@mantine/dates';
 import { protectedApi } from '../../utils/ApiService';
-import { UseARecord } from '../../contextapi/GenericContext';
+import { UseAReport } from '../../contextapi/GenericContext';
 import { excelDownload , directionAccessor} from '../../utils/helper';
 import type { SortingType } from '../../types/Generic';
 import type { TableDataType, HeaderType } from '../../types/AttendanceRecord';
 
-export default function AttendanceRecords() {
+export default function Report() {
   const [tableHeight, setTableHeight] = useState<number>(400);
   const topRef = useRef<HTMLDivElement | null>(null);
   const filterRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
-  const {state, dispatch}  = UseARecord();
+  const {state, dispatch}  = UseAReport();
   const [sort, setSort] = useState({} as SortingType);
   const [header, setheader] = useState<HeaderType | []>([]);
+
   useLayoutEffect(() => {
     const calculateTableHeight = () => {
       let h1 = 0;
@@ -36,7 +37,6 @@ export default function AttendanceRecords() {
 
     return () => window.removeEventListener('resize', calculateTableHeight);
   }, []);
-
 
   useEffect(()=>{
     if(state.filter?.attendance_date != null){
@@ -88,6 +88,7 @@ export default function AttendanceRecords() {
       Header:'Employee Name',
       accessor:'user_name',
       width:150,
+      headerClassName:"sticky-col",
       sortDirection: sort.accessor === 'user_name' ? sort.direction : 'none',
       Cell:({row}:any) => <>
         <Text>{row.original.user_name}</Text>

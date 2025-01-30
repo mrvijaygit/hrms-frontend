@@ -9,7 +9,7 @@ import Layout from './components/layout/Layout';
 import DashboardContext from "./contextapi/DashboardContext";
 import EmployeeFormContext from "./contextapi/EmployeeFormContext";
 import EmployeeListContext from "./contextapi/EmployeeListContext";
-import { HolidayContext, LeaveTypeContext , ClientsContext, ProjectsContext, TasksContext, ARecordContext} from './contextapi/GenericContext';
+import { HolidayContext, LeaveTypeContext , ClientsContext, ProjectsContext, TasksContext, AReportContext} from './contextapi/GenericContext';
 import NoticeContext from './contextapi/NoticeContext';
 import AttendanceContent from './contextapi/AttendanceContent';
 import PayrollContext from './contextapi/PayrollContext';
@@ -29,7 +29,7 @@ const LeavesRequests = lazy(()=> import('./pages/leaves/Requests'));
 const LeavesRequestsView = lazy(()=> import('./pages/leaves/View'));
 
 const AttendanceList = lazy(()=> import('./pages/attendance/List'));
-const AttendanceRecords = lazy(()=> import('./pages/attendance/AttendanceRecords'));
+const AttendanceReport = lazy(()=> import('./pages/attendance/Report'));
 
 const Clients = lazy(()=> import('./pages/projects/Clients'));
 const ProjectsList = lazy(()=> import('./pages/projects/List'));
@@ -64,7 +64,7 @@ export default function Router(){
                 <Route path='/leaves/requests/view' element={<RequiredAuth m_user_type_id={[1000, 100, 20]}><LeavesRequestsView/></RequiredAuth>} />
 
                 <Route path='/attendance/list' element={<RequiredAuth m_user_type_id={[1000, 100,20,1]}><AttendanceContent><AttendanceList /></AttendanceContent></RequiredAuth>} />
-                <Route path='/attendance/report' element={<RequiredAuth m_user_type_id={[1000, 100]}> <ARecordContext><AttendanceRecords /></ARecordContext></RequiredAuth>} />
+                <Route path='/attendance/report' element={<RequiredAuth m_user_type_id={[1000, 100]}> <AReportContext><AttendanceReport /></AReportContext></RequiredAuth>} />
 
                 <Route path='/projects/clients' element={<RequiredAuth m_user_type_id={[1000, 100]}><ClientsContext><Clients /></ClientsContext></RequiredAuth>} />
                 <Route path='/projects/list' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><ProjectsContext><ProjectsList /></ProjectsContext></RequiredAuth>} />
