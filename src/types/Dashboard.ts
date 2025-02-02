@@ -1,9 +1,15 @@
 import { dataType as noticeType } from "./Notice"
-import { dataType as holidayType } from "./Holiday";
+import { FormType as holidayFormType } from "./Holiday";
+import { formType as attendanceFormType } from "./Attendance";
 import { Dispatch } from "react";
 
-interface holidayTypeModify extends Omit<holidayType, "holiday_date">{
+interface holidayTypeModify extends Omit<holidayFormType, "holiday_date">{
     holiday_date: string
+}
+
+interface attendanceType extends Omit<attendanceFormType, "user_login_id">{
+    total_hours:number;
+    user_login_id:number;
 }
 
 interface todayBirthday {
@@ -31,6 +37,7 @@ export type cardType = {
 }
 
 export type stateType ={
+    attendance:attendanceType | null
     adminCard:cardType[] | null
     notice: noticeType[] | null,
     upcomingHolidays: holidayTypeModify[] | null,
@@ -39,7 +46,7 @@ export type stateType ={
     workAnniversary:  workAnniversary[] | null,
 }
 
-export type actionType = {type:"setAll", payload:stateType};
+export type actionType = {type:"setAll", payload:stateType['attendance'] | Omit<stateType, 'attendance'>}
 
 export type ContextType = {
     state:stateType,

@@ -4,6 +4,7 @@ import DashboardReducer from "../reducers/DashboardReducer";
 const Context = createContext({} as ContextType);
 
 const initialValues:stateType = {
+    attendance:null,
     adminCard:null,
     notice:null,
     upcomingHolidays:null,

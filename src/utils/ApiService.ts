@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASEURL = "http://192.168.0.101:8000";
+const BASEURL = "http://192.168.188.217:8000";
 import { alert } from "./Alert";
 import { logout} from "../redux/userSlice";
 import { store } from "../redux/store";

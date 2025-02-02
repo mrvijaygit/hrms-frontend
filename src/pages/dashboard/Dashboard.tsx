@@ -61,9 +61,7 @@ function Dashboard() {
           </>
         }
         
-
         <TodayBirthday/>
-
        <WorkAnniversary/>
         <UpcomingHolidays/>
         <Notice/>
