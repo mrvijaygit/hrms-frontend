@@ -84,7 +84,6 @@ export interface BankType{
 export interface DocumentType{
     employee_document_id:number,
     document_id: string | null;
-    document_name?: string;
     files: FileWithPath[];
 }
 
@@ -126,6 +125,7 @@ export interface EditFormType {
     education: EducationType | null;
     experience: ExperienceType[] | null;
     salary:SalaryType | null;
+    documents:{s_no:number; employee_document_id:number; file_path:string; file_name:string; document_id:number; document_name: string;}[] | null;
 }
 
 export type actionType = {type:'setPrimaryKey', payload:stateType} 

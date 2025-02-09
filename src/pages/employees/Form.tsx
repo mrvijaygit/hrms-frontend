@@ -1,5 +1,5 @@
 import { Paper, Tabs } from "@mantine/core"
-import {AiOutlineUser} from 'react-icons/ai'
+import {AiOutlineFile, AiOutlineUser} from 'react-icons/ai'
 import { IoSchoolOutline } from "react-icons/io5";
 import { BsBriefcase } from "react-icons/bs";
 import { PiBankLight } from "react-icons/pi";
@@ -60,6 +60,7 @@ function Form() {
         dispatch({type:'setEditFormData', payload:{'key':'education', 'value':resolve.data['education']}});
         dispatch({type:'setEditFormData', payload:{'key':'experience', 'value':resolve.data['experience']}});
         dispatch({type:'setEditFormData', payload:{'key':'salary', 'value':resolve.data['salary']}});
+        dispatch({type:'setEditFormData', payload:{'key':'documents', 'value':resolve.data['documents']}});
       }
       catch(err){
         alert.error('Master Not Found');
@@ -77,7 +78,7 @@ function Form() {
                   <Tabs.Tab value="education" leftSection={<IoSchoolOutline/>} disabled= {state?.user_login_id < 0}>Education</Tabs.Tab>
                   <Tabs.Tab value="experience" leftSection={<BsBriefcase/>} disabled= {state?.user_login_id < 0}>Experience</Tabs.Tab>
                   <Tabs.Tab value="bank_account" leftSection={<PiBankLight/>} disabled= {state?.user_login_id < 0}>Bank Account</Tabs.Tab>
-                  {/* <Tabs.Tab value="documents" leftSection={<AiOutlineFile/>} disabled= {state?.user_login_id < 0}>Documents</Tabs.Tab> */}
+                  <Tabs.Tab value="documents" leftSection={<AiOutlineFile/>} disabled= {state?.user_login_id < 0}>Documents</Tabs.Tab>
                   <Tabs.Tab value="salary" leftSection={<FaRegMoneyBillAlt/>} disabled= {state?.user_login_id < 0}>Salary</Tabs.Tab>
                 </Tabs.List>
                 <Tabs.Panel value="basic_details" pt='sm'>

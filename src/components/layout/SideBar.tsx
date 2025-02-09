@@ -1,6 +1,6 @@
 import { ActionIcon, Box , Flex, Image, Title} from "@mantine/core"
 import {NavLink} from "react-router-dom";
-import {FaUsers, FaCalendar, FaClipboardList, FaMoneyBill, FaBullhorn, FaCalendarCheck, FaXmark} from "react-icons/fa6";
+import {FaUsers, FaCalendar, FaClipboardList, FaMoneyBill, FaBullhorn, FaCalendarCheck, FaXmark, FaStar} from "react-icons/fa6";
 import { RxDashboard } from "react-icons/rx";
 import favicon  from "../../assets/images/favicon.png";
 import LinksGroup from "./LinksGroup";
@@ -9,8 +9,8 @@ import { panelControl } from "../../redux/layoutSlice";
 
 function SideBar() {  
 
-  const m_user_type_id = useAppSelector(state => state.user.m_user_type_id);
-  const panelActive = useAppSelector(state => state.layout.panelActive);
+  const m_user_type_id = useAppSelector(state => state?.user.m_user_type_id);
+  const panelActive = useAppSelector(state => state?.layout.panelActive);
   const dispatch = useAppDispatch();
   const locationUrl = window.location.href;
 
@@ -77,6 +77,17 @@ function SideBar() {
         { label: 'Notice', link: '/announcements/notice', id:17, access:[1000,100]},
       ],
       group_access:[1000,100]
+    },
+    {
+      label: 'Performance Review',
+      icon: <FaStar/>,
+      initiallyOpened: locationUrl.includes('/performance'),
+      group: [
+        { label: 'Appraisal Cycle', link: '/performance', id:19, access:[1000]},
+        { label: 'Competency', link: '/performance/competency', id:20, access:[1000]},
+        { label: 'My Review', link: '/performance/myreview', id:20, access:[1000,100, 20 ,1]},
+      ],
+      group_access:[1000,100,20,1]
     }
   ];
   

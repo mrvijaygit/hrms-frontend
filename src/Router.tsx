@@ -9,7 +9,7 @@ import Layout from './components/layout/Layout';
 import DashboardContext from "./contextapi/DashboardContext";
 import EmployeeFormContext from "./contextapi/EmployeeFormContext";
 import EmployeeListContext from "./contextapi/EmployeeListContext";
-import { HolidayContext, LeaveTypeContext , ClientsContext, ProjectsContext, TasksContext, AReportContext} from './contextapi/GenericContext';
+import { HolidayContext, LeaveTypeContext , ClientsContext, ProjectsContext, TasksContext, AReportContext, ACycleContext, AppraiseeContext} from './contextapi/GenericContext';
 import NoticeContext from './contextapi/NoticeContext';
 import AttendanceContent from './contextapi/AttendanceContent';
 import PayrollContext from './contextapi/PayrollContext';
@@ -43,6 +43,9 @@ const PayrollList = lazy(()=> import('./pages/payroll/List'));
 const Notices = lazy(()=> import('./pages/announcements/Notice'));
 
 const Profile = lazy(()=> import('./pages/employees/Profile'));
+
+const AppraisalCycle = lazy(()=> import('./pages/perfomance/AppraisalCycle'));
+const AppraiseeList = lazy(()=> import('./pages/perfomance/AppraiseeList'));
 
 export default function Router(){
 
@@ -78,6 +81,9 @@ export default function Router(){
                 <Route path='/announcements/notice' element={<RequiredAuth m_user_type_id={[1000, 100]}><NoticeContext><Notices /></NoticeContext></RequiredAuth>} />
 
                 <Route path='/employees/list/profile' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><Profile /></RequiredAuth>} />
+
+                <Route path='/performance' element={<RequiredAuth m_user_type_id={[1000]}><ACycleContext><AppraisalCycle /></ACycleContext></RequiredAuth>} />
+                <Route path='/performance/appraiseelist' element={<RequiredAuth m_user_type_id={[1000,100,20]}><AppraiseeContext><AppraiseeList /></AppraiseeContext></RequiredAuth>} />
             </Route>
 
         </Routes>

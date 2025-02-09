@@ -13,7 +13,7 @@ import { Provider } from 'react-redux'
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <MantineProvider theme={ThemeModify}>
-        <DatesProvider settings={{locale:"en", timezone:"UTC"}}>
+        <DatesProvider settings={{locale:"en"}}>
         <BrowserRouter>
           <Router />
         </BrowserRouter>

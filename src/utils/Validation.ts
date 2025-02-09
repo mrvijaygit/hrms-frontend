@@ -1,8 +1,8 @@
 import z from "zod";
 
-const NormalStringValidation = z.string().trim().min(4, "Min 4 letter is required");
+export const NormalStringValidation = z.string().trim().min(4, "Min 4 letter is required");
 const DateValidation = z.date();
-const numberValidation = z.number();
+const numberValidation = z.number({message:"Required"});
 
 export const TaskSchema = z.object({
     task_id:z.number(),

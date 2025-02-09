@@ -11,8 +11,7 @@ export default function GenericReducer<T extends {'s_no' : number}, E={}, F={}>(
         case "response":
             let data = action.payload.data;
             const totalPage = state.show ? Math.ceil(action.payload.totalRecord / Number(state.show)) : 0;
-            const info = `Showing ${data[0].s_no ?? 0} - ${data[data.length - 1].s_no ?? 0} of ${action.payload.totalRecord} entries`;
-             
+            const info = `Showing ${data[0]?.s_no ?? 0} - ${data[data.length - 1]?.s_no ?? 0} of ${action.payload.totalRecord} entries`;
             return {...state, 'data':action.payload.data, 'totalPage':totalPage, 'info':info};
         case "filter":
             return { ...state, filter: state.filter ? { ...state.filter, [action.payload.key]: action.payload.value }

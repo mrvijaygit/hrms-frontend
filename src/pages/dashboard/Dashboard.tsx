@@ -45,7 +45,9 @@ function Dashboard() {
          </Flex>
       </Paper>
       <Grid gutter='xs' align="stretch"> 
-        <Punch/>
+        {
+          userInfo.m_user_type_id != 1000 && <Punch/>
+        }
         {
           [1000,100].includes(userInfo.m_user_type_id) &&  <>
           

@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Group, Pagination, Paper,Select,Text, Title } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import {FaFileExcel, FaCheck, FaXmark, FaCircleInfo} from "react-icons/fa6";
+import {FaFileExcel, FaCheck, FaXmark, FaRegCalendarCheck} from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
 import { MonthPickerInput } from '@mantine/dates';
@@ -9,6 +9,7 @@ import { UseAReport } from '../../contextapi/GenericContext';
 import { excelDownload , directionAccessor} from '../../utils/helper';
 import type { SortingType } from '../../types/Generic';
 import type { TableDataType, HeaderType } from '../../types/AttendanceRecord';
+import { FaExclamationCircle } from "react-icons/fa";
 
 export default function Report() {
   const [tableHeight, setTableHeight] = useState<number>(400);
@@ -69,9 +70,11 @@ export default function Report() {
       case 1:
         return <FaCheck color="green"/>;
       case 2:
-        return <FaXmark color="red"/>;
+        return <FaExclamationCircle color="orange"/>;
       case 3:
-        return <FaCircleInfo color="orange"/>;
+        return <FaRegCalendarCheck color="blue.5"/>;
+      case 4:
+        return <FaXmark color="red"/>;
       default:
         return <>-</>;
     }
