@@ -3,7 +3,7 @@ import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import './assets/css/style.css';
 import '@mantine/charts/styles.css';
-import {MantineProvider } from '@mantine/core';
+import {MantineProvider} from '@mantine/core';
 import {DatesProvider } from '@mantine/dates';
 import {ThemeModify} from './ThemeCustomize.ts';
 import Router from './Router.tsx';

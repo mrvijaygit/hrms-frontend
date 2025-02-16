@@ -160,11 +160,12 @@ export default function AppraisalCycle() {
       sortDirection: sort.accessor === 'appraisal_date' ? sort.direction : 'none'
     },
     {
-      Header:'Submission',
-      accessor:"is_submission",
+      Header:'Active',
+      accessor:"is_active",
       width: 150,
       disableSortBy:true,
       Cell:({row, value})=>{
+        console.log(value);
         return <Switch checked={value} disabled={row.original.appraisal_status_id == 3 ? true : false}/>;
       }
     },
@@ -227,7 +228,7 @@ export default function AppraisalCycle() {
           <Pagination total={state.totalPage} size='sm' value={state.page} onChange={(value) => dispatch({type:'setPage', payload:value})}/>
         </Group>
       </Paper>
-      <Drawer opened={opened} onClose={()=>{form.reset(); close(); dispatch({type:"isUpdated", payload:{is_updated:false, editData:null}});}} title={state.is_updated ? "Update Holiday"  : "Add Holiday"} closeOnClickOutside={false} position="right" offset={8} radius="sm">
+      <Drawer opened={opened} onClose={()=>{form.reset(); close(); dispatch({type:"isUpdated", payload:{is_updated:false, editData:null}});}} title={state.is_updated ? "Update Cycle"  : "Add Cycle"} closeOnClickOutside={false} position="right" offset={8} radius="sm">
         <Box component="form" onSubmit={form.onSubmit(values => handleSubmit(values))}>
           <Grid gutter='sm' align='flex-end'>
               <Grid.Col span={12}>

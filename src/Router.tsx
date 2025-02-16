@@ -15,6 +15,7 @@ import AttendanceContent from './contextapi/AttendanceContent';
 import PayrollContext from './contextapi/PayrollContext';
 import LeaveRequestContext from './contextapi/LeaveRequestContext';
 import TeamContext from './contextapi/TeamContext';
+import MyReviewContext from './contextapi/MyReviewContext';
 
 import EmployeesForm from "./pages/employees/Form";
 import Dashboard from './pages/dashboard/Dashboard';
@@ -87,7 +88,7 @@ export default function Router(){
                 <Route path='/performance/appraisalcycle' element={<RequiredAuth m_user_type_id={[1000]}><ACycleContext><AppraisalCycle /></ACycleContext></RequiredAuth>} />
                 <Route path='/performance/appraisalcycle/appraiseelist' element={<RequiredAuth m_user_type_id={[1000,100,20]}><AppraiseeContext><AppraiseeList /></AppraiseeContext></RequiredAuth>} />
                 <Route path='/performance/competency' element={<RequiredAuth m_user_type_id={[1000]}><CompetencyContext><Competency /></CompetencyContext></RequiredAuth>} />
-                <Route path='/performance/myreview' element={<RequiredAuth m_user_type_id={[1000]}><MyReview /></RequiredAuth>} />
+                <Route path='/performance/myreview' element={<RequiredAuth m_user_type_id={[1000]}><MyReviewContext><MyReview /></MyReviewContext></RequiredAuth>} />
             </Route>
 
         </Routes>

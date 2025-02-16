@@ -2,6 +2,7 @@ import axios from "axios";
 const BASEURL = "http://localhost:8000";
 import { alert } from "./Alert";
 import { logout} from "../redux/userSlice";
+import { loaderControl} from "../redux/layoutSlice";
 import { store } from "../redux/store";
 export const authApi = axios.create({
     baseURL: BASEURL,
@@ -9,6 +10,9 @@ export const authApi = axios.create({
         'Content-Type': 'application/json',
     }
 });
+
+// Api count for loader visible;
+let apiCount:number = 0;
 
 const ErrorHandling = (error:any) =>{
     if(error.code == "ERR_NETWORK"){
@@ -33,10 +37,27 @@ export const protectedApi = axios.create({
     }
 });
 
+protectedApi.interceptors.request.use(function (request){
+    apiCount++;
+    if(!store.getState().layout.isLoading){
+        store.dispatch(loaderControl(true));
+    }
+    return request;
+});
+
+const removeApiCounts = () =>{
+    apiCount--;
+    if(store.getState().layout.isLoading && apiCount == 0){
+        store.dispatch(loaderControl(false));
+    }
+}
+
 protectedApi.interceptors.response.use(function (response) {
+    removeApiCounts();
     return  Promise.resolve(response);
   }, async function (error) {
-
+    removeApiCounts();
+    
     const originalRequest = error.config;
 
     if(error.response && error.response.status === 403 && !originalRequest._retry){

@@ -2,10 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export interface stateType{
     panelActive:boolean;
+    isLoading:boolean;
 }
 
 const initialState:stateType = {
-    panelActive:false
+    panelActive:false,
+    isLoading:false
 }
 
 export const layoutSlice = createSlice({
@@ -17,7 +19,12 @@ export const layoutSlice = createSlice({
                 ...state, panelActive:payload,
             }
         },
+        loaderControl:(state,{payload}:{payload:boolean})=>{
+            return state = {
+                ...state, isLoading:payload,
+            }
+        },
     }
 });
-export const {panelControl} = layoutSlice.actions;
+export const {panelControl, loaderControl} = layoutSlice.actions;
 export default layoutSlice.reducer;

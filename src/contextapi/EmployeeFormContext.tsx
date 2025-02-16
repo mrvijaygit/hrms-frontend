@@ -14,7 +14,8 @@ const initialState:stateType= {
    bank:null,
    education:null,
    experience:null,
-   salary:null
+   salary:null,
+   documents:null
 }
  
 const Context  = createContext({} as ContextType);

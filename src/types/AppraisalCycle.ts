@@ -13,6 +13,6 @@ export interface TableDataType extends Omit<FormType, "appraisal_date">{
     start_date:string;
     end_date:string;
     appraisal_status:string;
-    is_submission:boolean;
+    is_active:boolean;
     is_rating:boolean;
 }

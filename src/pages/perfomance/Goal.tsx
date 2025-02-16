@@ -1,5 +1,5 @@
 import { useDisclosure } from '@mantine/hooks';
-import { Box, Button, Drawer, Grid, Group, NumberInput, Pagination, Paper,Select,Text,TextInput, Title } from "@mantine/core";
+import { Box, Button, Drawer, Grid, Group, NumberInput, Pagination, Paper,Select,Text,Textarea,TextInput, Title } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
 import { Column } from "react-table"
@@ -15,7 +15,6 @@ import { DatePickerInput } from '@mantine/dates';
 import { Progress } from '@mantine/core';
 import { useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../redux/hook';
-import CustomSelect from '../../components/CustomSelect';
 
 export default function Goal() {
   const [tableHeight, setTableHeight] = useState<number>(400);
@@ -35,7 +34,6 @@ export default function Goal() {
         goal_id:-1,
         goal_name:"",
         goal_date:[null, null],
-        m_priority_id:null,
         description:"",
         weightage:0,
         progress:0
@@ -43,7 +41,6 @@ export default function Goal() {
     validate:{
         goal_name: (value) => (value.trim().length > 4 ? null : "Required"),
         goal_date:(value) => value[0] != null ? null : "Required",
-        m_priority_id:(value) => value != null ? null : "Required",
         description: (value) => (value.trim().length > 4 ? null : "Required"),
         weightage: (value) => (String(value).trim().length > 0 ? null : "Required"),
         progress: (value) => (String(value).trim().length > 0 ? null : "Required"),
@@ -99,7 +96,6 @@ export default function Goal() {
             goal_id:data.goal_id,
             goal_name:data.goal_name,
             goal_date:[new Date(data.start_date), new Date(data.end_date)],
-            m_priority_id:data.m_priority_id,
             description:data.description,
             weightage:data.weightage,
             progress:data.progress
@@ -129,7 +125,7 @@ export default function Goal() {
         user_id = location.state.user_login_id;
       }
 
-      let promise = await protectedApi.post("/performance/saveGoal", JSON.stringify({...values, "user_login_id":user_id}));
+      let promise = await protectedApi.post("/performance/saveGoal", JSON.stringify({...values, "user_login_id":user_id, "appraisal_cycle_id":1}));
       alert.success(promise.data.msg);
       form.reset();
       dispatch({type:"isUpdated", payload:{is_updated:false, editData:null}});
@@ -217,7 +213,7 @@ export default function Goal() {
         <Group align="center" justify="space-between" gap='xs'>
           <Title order={6} tt='uppercase'>Goal</Title>
           <Group align="center" gap='xs'>
-            <Button leftSection={<FaPlus/>} onClick={open}>Add</Button>
+            <Button leftSection={<FaPlus/>} onClick={open}>Add Goal</Button>
           </Group>
         </Group>
       </Paper>
@@ -243,16 +239,13 @@ export default function Goal() {
                 <DatePickerInput type='range' label="Date" {...form.getInputProps("goal_date")}/>
               </Grid.Col>
               <Grid.Col span={12}>
-                <CustomSelect label="Priority" data={[]} {...form.getInputProps("m_priority_id")} />
+                <NumberInput label="Weightage" maxLength={3} min={0} max={100} {...form.getInputProps("weightage")}/>
               </Grid.Col>
               <Grid.Col span={12}>
-                <NumberInput label="Description" maxLength={2} {...form.getInputProps("description")}/>
+                <NumberInput label="progress" maxLength={3} min={0}  max={100} {...form.getInputProps("progress")}/>
               </Grid.Col>
               <Grid.Col span={12}>
-                <NumberInput label="Weightage" maxLength={2} {...form.getInputProps("weightage")}/>
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <NumberInput label="progress" maxLength={2} {...form.getInputProps("progress")}/>
+                <Textarea label="Description" maxLength={255} rows={5} {...form.getInputProps("description")}/>
               </Grid.Col>
               <Grid.Col span={12}>
                 <Group justify="flex-end" gap='sm'>
