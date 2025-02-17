@@ -2,25 +2,22 @@ export interface FormType {
     task_id:number;
     task_name:string;
     task_description:string;
-    start_date:Date | null;
-    end_date:Date | null;
-    task_status_id:string | null;
-    projected_days:string | null;
-    projected_hours:string | null;
-    projected_minutes:string | null;
+    task_date:[Date | null, Date | null];
+    task_status_id:number | null;
+    projected_hours:number;
 }
 
-export interface TableDataType extends Omit<FormType, "start_date" | "end_date"> {
+export interface TableDataType extends FormType {
     s_no:number;
     start_date:string;
     end_date:string;
     task_status:string;
-    projected_time:string;
+    status_color:string;
     spent_time:string;
 }
 
 export type FilterType = {
-    project_id:string | null,
-    user_login_id:string | null,
+    project_id:number | null,
+    task_status_id:number | null,
 }
 

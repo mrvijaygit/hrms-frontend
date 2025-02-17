@@ -9,7 +9,7 @@ import Layout from './components/layout/Layout';
 import DashboardContext from "./contextapi/DashboardContext";
 import EmployeeFormContext from "./contextapi/EmployeeFormContext";
 import EmployeeListContext from "./contextapi/EmployeeListContext";
-import { HolidayContext, LeaveTypeContext , ClientsContext, ProjectsContext, TasksContext, AReportContext, ACycleContext, AppraiseeContext, CompetencyContext} from './contextapi/GenericContext';
+import { HolidayContext, LeaveTypeContext , ClientsContext, ProjectsContext, TasksContext, AReportContext, ACycleContext, AppraiseeContext, CompetencyContext, TimeContext} from './contextapi/GenericContext';
 import NoticeContext from './contextapi/NoticeContext';
 import AttendanceContent from './contextapi/AttendanceContent';
 import PayrollContext from './contextapi/PayrollContext';
@@ -37,6 +37,7 @@ const ProjectsList = lazy(()=> import('./pages/projects/List'));
 const ProjectView = lazy(()=> import('./pages/projects/View'));
 const Team = lazy(()=> import('./pages/projects/Team'));
 const Tasks = lazy(()=> import('./pages/projects/Tasks'));
+const TimeSheets = lazy(()=> import('./pages/projects/TimeSheets'));
 
 const GeneratePayslip = lazy(()=> import('./pages/payroll/GeneratePayslip'));
 const PayrollList = lazy(()=> import('./pages/payroll/List'));
@@ -77,6 +78,7 @@ export default function Router(){
                 <Route path='/projects/view' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><ProjectView /></RequiredAuth>} />
                 <Route path='/projects/team' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><TeamContext><Team/></TeamContext></RequiredAuth>} />
                 <Route path='/projects/tasks' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><TasksContext><Tasks/></TasksContext></RequiredAuth>} />
+                <Route path='/projects/timesheets' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><TimeContext><TimeSheets/></TimeContext></RequiredAuth>} />
 
                 <Route path='/payroll/generatePayslip' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><GeneratePayslip /></RequiredAuth>} />
                 <Route path='/payroll' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><PayrollContext><PayrollList /></PayrollContext></RequiredAuth>} />

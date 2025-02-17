@@ -14,7 +14,7 @@ export type TAction<T, E={}, F={}> = {type:"setPage", payload:number}
 | {type:"setShow", payload:string | null} 
 | {type:"response", payload:{data:T[], totalRecord:number}} 
 | {type:"isUpdated", payload:{ is_updated:boolean, editData:E | null}}
-| {type:"filter", payload:{key: keyof F , value:string | null | Date}};
+| {type:"filter", payload:{key: keyof F , value:number | string | null | Date}};
 
 export type ContextType<T, E={}, F={}> = {
     state:TState<T,E, F>,
