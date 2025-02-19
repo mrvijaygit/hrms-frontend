@@ -1,7 +1,6 @@
 export interface FormType{
     appraisee_id:number;
     user_login_id:number | null;
-    status_id:number | null;
 }
 
 export interface TableDataType extends FormType{

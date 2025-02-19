@@ -247,6 +247,7 @@ export default function List() {
       Header:'Action',
       width: 150,
       headerClassName:"text-center",
+      disableSortBy:true,
       Cell:({row})=>{
           return <Group gap='xs' justify='center'>
             <Button variant='light' color='green' onClick={()=> navigate('/projects/view', {state:{project_id:row.original.project_id}})}><FaEye/></Button>

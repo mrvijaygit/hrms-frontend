@@ -4,6 +4,7 @@ import type {TableDataType as HolidayTableDataType, FilterType as HolidayFilterT
 import type {TableDataType as LeaveTypeTableDataType, FormType as LeaveTypeFormType} from "../types/LeaveType";
 import type {TableDataType as ClientsTableDataType, FormType as ClientsFormType} from "../types/Clients";
 import type {TableDataType as ProjectsTableDataType, FormType as ProjectsFormType} from "../types/Projects";
+import type {TableDataType as TeamTableDataType, FormType as TeamFormType, FilterType as TeamFilterType} from "../types/Team";
 import type {TableDataType as TasksTableDataType, FormType as TasksFormType, FilterType as TasksFilterType} from "../types/Tasks";
 import type {TableDataType as AReportTableDataType, FilterType as AReportFilterType} from "../types/AttendanceRecord";
 import type {TableDataType as ACycleTableDataType, FormType as ACycleFormType} from "../types/AppraisalCycle";
@@ -18,6 +19,7 @@ const Holiday = createContext({} as ContextType<HolidayTableDataType, HolidayFor
 const LeaveType = createContext({} as ContextType<LeaveTypeTableDataType, LeaveTypeFormType>);
 const Clients = createContext({} as ContextType<ClientsTableDataType, ClientsFormType>);
 const Projects = createContext({} as ContextType<ProjectsTableDataType, ProjectsFormType>);
+const Team = createContext({} as ContextType<TeamTableDataType, TeamFormType, TeamFilterType>);
 const Tasks = createContext({} as ContextType<TasksTableDataType, TasksFormType, TasksFilterType>);
 const AReport = createContext({} as ContextType<AReportTableDataType, {}, AReportFilterType>);
 const ACycle = createContext({} as ContextType<ACycleTableDataType, ACycleFormType>);
@@ -69,6 +71,18 @@ const ProjectsInitialValues:TState<ProjectsTableDataType, ProjectsFormType> = {
     editData:null
 }
 
+const TeamInitialValues:TState<TeamTableDataType, TeamFormType, TeamFilterType> = {
+    page:1,
+    show:"10",
+    data:[],
+    info:"",
+    totalPage:1,
+    is_updated:false,
+    editData:null,
+    filter:{
+        project_id:null,
+    }
+}
 const TasksInitialValues:TState<TasksTableDataType, TasksFormType, TasksFilterType> = {
     page:1,
     show:"10",
@@ -171,6 +185,11 @@ export function ProjectsContext({children}:PropsWithChildren){
     return <Projects.Provider value={{state, dispatch}}>{children}</Projects.Provider>
 }
 
+export function TeamContext({children}:PropsWithChildren){
+    const [state, dispatch] = useReducer(GenericReducer<TeamTableDataType, TeamFormType, TeamFilterType>, TeamInitialValues);
+    return <Team.Provider value={{state, dispatch}}>{children}</Team.Provider>
+}
+
 export function TasksContext({children}:PropsWithChildren){
     const [state, dispatch] = useReducer(GenericReducer<TasksTableDataType, TasksFormType, TasksFilterType>, TasksInitialValues);
     return <Tasks.Provider value={{state, dispatch}}>{children}</Tasks.Provider>
@@ -210,6 +229,7 @@ export const UseHoliday = () => useContext(Holiday);
 export const UseLeaveType = () => useContext(LeaveType);
 export const UseClients = () => useContext(Clients);
 export const UseProjects = () => useContext(Projects);
+export const UseTeam = () => useContext(Team);
 export const UseTasks = () => useContext(Tasks);
 export const UseAReport = () => useContext(AReport);
 export const UseACycle = () => useContext(ACycle);

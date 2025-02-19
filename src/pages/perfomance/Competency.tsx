@@ -140,19 +140,20 @@ export default function Competency() {
     {
       Header:'Name',
       accessor:"compentency_name",
-      width:200,
+      width:400,
       sortDirection: sort.accessor === 'compentency_name' ? sort.direction : 'none'
     },
     {
       Header:'Weightage',
       accessor:"weightage",
-      width: 250,
-      sortDirection: sort.accessor === 'weightage' ? sort.direction : 'none'
+      width: 100,
+      sortDirection: sort.accessor === 'weightage' ? sort.direction : 'none',
+      headerClassName:"text-center",
     },
 
     {
       Header:'Action',
-      width: 150,
+      width: 100,
       headerClassName:"text-center",
       Cell:({row})=>{
           return <Group gap='xs' justify='center'>

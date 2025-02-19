@@ -14,5 +14,4 @@ export interface TableDataType extends Omit<FormType, "appraisal_date">{
     end_date:string;
     appraisal_status:string;
     is_active:boolean;
-    is_rating:boolean;
 }

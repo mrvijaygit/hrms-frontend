@@ -1,25 +1,37 @@
 import { useDisclosure } from '@mantine/hooks';
-import { Box, Button, Drawer, Grid, Group, NumberInput, Pagination, Paper,Select,Text,TextInput, Title } from "@mantine/core";
+import { Box, Button, ComboboxData, Drawer, Grid, Group, Pagination, Paper,Select,Text,Textarea, Title } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {FaFileExcel, FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
-import { useForm } from "@mantine/form";
+import { useForm, zodResolver} from "@mantine/form";
 import { protectedApi } from '../../utils/ApiService';
 import { alert } from '../../utils/Alert';
 import { UseTime } from '../../contextapi/GenericContext';
 import { excelDownload , directionAccessor} from '../../utils/helper';
 import type { SortingType } from '../../types/Generic';
 import type { FormType, TableDataType } from '../../types/TimeSheets';
+import { FaAngleDoubleLeft } from 'react-icons/fa';
+import { useNavigate, useLocation} from 'react-router-dom';
+import { TimeSheetSchema } from '../../utils/Validation';
+import { DateTimePicker } from '@mantine/dates';
+import CustomSelect from '../../components/CustomSelect';
 
 export default function TimeSheets() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [tableHeight, setTableHeight] = useState<number>(400);
   const topRef = useRef<HTMLDivElement | null>(null);
+  const filterRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [triggerApi, setTriggerApi] = useState<Boolean>(true);
+  const [selfTrigger, setSelfTrigger] = useState<Boolean>(true);
   const {state, dispatch}  = UseTime();
   const [sort, setSort] = useState({} as SortingType);
+
+  const [tasks, setTasks] = useState<ComboboxData | null>(null);
+  const [teamMembers, setTeamMembers] = useState<ComboboxData | null>(null);
 
   const form = useForm<FormType>({
     initialValues:{
@@ -30,20 +42,14 @@ export default function TimeSheets() {
       end_date_time:null,
       comments:""
     },
-    validate:{
-      task_id: (value) => (value != null ? null : "Required"),
-      project_member_id: (value) => (value != null ? null : "Required"),
-      start_date_time: (value) => (value != null ? null : "Required"),
-      end_date_time: (value) => (value != null ? null : "Required"),
-      comments: (value) => (value.trim().length > 4 ? null : "Required")
-    }
+    validate:zodResolver(TimeSheetSchema)
   });
 
   useLayoutEffect(() => {
     const calculateTableHeight = () => {
       let h1 = 0;
-      if (topRef.current) {
-        h1 =  topRef.current.clientHeight + 58 + 56; 
+      if (topRef.current && filterRef.current) {
+        h1 =  topRef.current.clientHeight + filterRef.current.clientHeight + 58 + 56; 
         if(bottomRef.current){
           h1 += bottomRef.current.clientHeight;
         }
@@ -61,25 +67,49 @@ export default function TimeSheets() {
   useEffect(()=>{
     (async()=>{
       try{
-        let response = await protectedApi.get("/project/timesheets", {
-          params:{
-            currentpage:state.page,
-            postperpage:Number(state.show),
-            sorting:sort,
-            filter:state?.filter
-          }
-        });
-        dispatch({type:"response", payload:{
-          data:response.data.data,
-          totalRecord:response.data.totalRecord
-        }});
-      }
-      catch(err){
+        let response1 = await protectedApi.get("/master/tasks", {params:{'project_id':location?.state?.project_id}});
+        setTasks(response1.data);
 
+        let response2 = await protectedApi.get("/master/teamMembers", {params:{'project_id':location?.state?.project_id}});
+        setTeamMembers(response2.data);
+
+
+        dispatch({type:"filter", payload:{'key':"task_id",'value':location?.state?.task_id ? location?.state?.task_id : -1}});
+        dispatch({type:"filter", payload:{'key':"project_member_id",'value':location?.state?.project_member_id ? location?.state?.project_member_id : -1}});
+        
+
+        dispatch({type:"filter", payload:{'key':"project_id",'value':location?.state?.project_id}});
+      }
+      catch(err:any){
+        alert.error(err, true);
       }
     })()
-  
-  },[state.page, state.show, triggerApi, sort]);
+  },[]);
+
+  useEffect(()=>{
+    if(state?.filter?.project_id != null && state?.filter?.task_id != null &&  state?.filter?.project_member_id){
+      (async()=>{
+        try{
+          let response = await protectedApi.get("/project/timesheets", {
+            params:{
+              currentpage:state.page,
+              postperpage:Number(state.show),
+              sorting:sort,
+              filter:state?.filter
+            }
+          });
+          dispatch({type:"response", payload:{
+            data:response.data.data,
+            totalRecord:response.data.totalRecord
+          }});
+          setSelfTrigger((prev) => (prev == false) ? true : false);
+        }
+        catch(err:any){
+          alert.error(err, true)
+        }
+      })();
+    }
+  },[state.page, state.show, triggerApi, sort, state?.filter?.project_member_id, state?.filter?.task_id]);
 
   const handleEdit = async(id:number) =>{
       try{
@@ -88,8 +118,8 @@ export default function TimeSheets() {
           timesheet_id:data.timesheet_id,
           task_id:data.task_id,
           project_member_id:data.project_member_id,
-          start_date_time:new Date(),
-          end_date_time:new Date(),
+          start_date_time:new Date(data.start_date_time),
+          end_date_time:new Date(data.end_date_time),
           comments:data.comments
         };
         dispatch({type:"isUpdated", payload:{is_updated:true, editData:obj}});
@@ -112,7 +142,7 @@ export default function TimeSheets() {
 
   const handleSubmit = async(values:FormType) =>{
     try{
-      let promise = await protectedApi.post("/project/saveTimesheets", JSON.stringify(values));
+      let promise = await protectedApi.post("/project/saveTimesheets", JSON.stringify({...values, 'project_id':location.state?.project_id}));
       alert.success(promise.data.msg);
       form.reset();
       dispatch({type:"isUpdated", payload:{is_updated:false, editData:null}});
@@ -120,7 +150,7 @@ export default function TimeSheets() {
       setTriggerApi((prev) => (prev == false) ? true : false);
     }
     catch(error:any){
-      alert.error(error);
+      alert.error(error, true);
     }
   }
 
@@ -149,8 +179,12 @@ export default function TimeSheets() {
     {
       Header:'User Name',
       accessor:"user_name",
-      width:"auto",
-      sortDirection: sort.accessor === 'user_name' ? sort.direction : 'none'
+      width:300,
+      sortDirection: sort.accessor === 'user_name' ? sort.direction : 'none',
+      Cell:({row})=><>
+        <Text>{row.original.user_name}</Text>
+        <Text c='dimmed' fz={13}>{row.original.comments}</Text>
+      </>
     },
     {
       Header:'Task Name',
@@ -159,21 +193,30 @@ export default function TimeSheets() {
       sortDirection: sort.accessor === 'task_name' ? sort.direction : 'none'
     },
     {
-      Header:'Date Time',
-      accessor:"display_date_time",
-      width: 150,
+      Header:'Start Date Time',
+      accessor:"display_start_date_time",
+      width: 200,
       disableSortBy:true
     },
     {
-      Header:'Comments',
-      accessor:"comments",
-      width: 250,
+      Header:'End Date Time',
+      accessor:"display_end_date_time",
+      width: 200,
       disableSortBy:true
+    },
+    {
+      Header:'Spent Time',
+      accessor:"task_duration",
+      width: 100,
+      disableSortBy:true,
+      headerClassName:"text-center",
+      Cell:({value}) => <Text>{value.split(':')[0]}:{value.split(':')[1]}</Text> 
     },
     {
       Header:'Action',
       width: 100,
       headerClassName:"text-center",
+      disableSortBy:true,
       Cell:({row})=>{
           return <Group gap='xs' justify='center'>
             <Button variant='light' onClick={()=>handleEdit(row.original.timesheet_id)}><FaPencil/></Button>
@@ -181,7 +224,7 @@ export default function TimeSheets() {
           </Group>;
       }
     },
-  ], [sort]);
+  ], [sort, selfTrigger]);
 
   const data:TableDataType[] = useMemo(()=>state.data, [state.data]);
 
@@ -197,8 +240,23 @@ export default function TimeSheets() {
           <Group align="center" gap='xs'>
             <Button leftSection={<FaPlus/>} onClick={open}>Add TimeSheet</Button>
             <Button leftSection={<FaFileExcel/>} color='green' onClick={()=>excelDownload("timesheets")}>Excel</Button>
+            <Button leftSection={<FaAngleDoubleLeft/>} color='dark.6' onClick={()=>navigate(-1)}>Back</Button>
           </Group>
         </Group>
+      </Paper>
+      <Paper p='xs' shadow='xs' mb='xs' ref={filterRef}>
+        <Grid gutter='xs'>
+          <Grid.Col span={{lg:3, md:6}}>
+            <CustomSelect size='xs' label='Task' data={tasks != null ? tasks :[]} 
+            value={state.filter?.task_id} 
+            onChange={(value) => dispatch({type:"filter", payload:{'key':"task_id",'value':value}})}/>
+          </Grid.Col>
+          <Grid.Col span={{lg:3, md:6}}>
+            <CustomSelect size='xs' label='Team Member' data={teamMembers != null ? teamMembers :[]} 
+            value={state.filter?.project_member_id} 
+            onChange={(value) => dispatch({type:"filter", payload:{'key':"project_member_id",'value':value}})}/>
+          </Grid.Col>
+        </Grid>
       </Paper>
       <Paper p='xs' shadow="xs" my='xs'>
         <Box style={{'overflow':'auto'}} h={tableHeight}>
@@ -216,16 +274,19 @@ export default function TimeSheets() {
         <Box component="form" onSubmit={form.onSubmit(values => handleSubmit(values))}>
           <Grid gutter='sm' align='flex-end'>
               <Grid.Col span={12}>
-                <TextInput label="Client Name" maxLength={50} {...form.getInputProps("task_id")}/>
+                <CustomSelect label="Task" data={tasks != null ? tasks :[]} {...form.getInputProps("task_id")}/>
               </Grid.Col>
               <Grid.Col span={12}>
-                <TextInput label="Contact Person Name" maxLength={30} {...form.getInputProps("contact_person_name")}/>
+                <CustomSelect label="Team Member" data={teamMembers != null ? teamMembers :[]}  {...form.getInputProps("project_member_id")}/>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <DateTimePicker label="Start Date & Time" maxDate={new Date()} valueFormat='DD-MMM-YYYY hh:mm a' {...form.getInputProps("start_date_time")}/>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <DateTimePicker label="End Date & Time" maxDate={new Date()} valueFormat='DD-MMM-YYYY hh:mm a' {...form.getInputProps("end_date_time")}/>
               </Grid.Col>
               <Grid.Col span={12}>
-                <TextInput label="Email Id" maxLength={50} {...form.getInputProps("email_id")}/>
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <NumberInput label="Contact Number" minLength={10} maxLength={10} {...form.getInputProps("contact_no")}/>
+                <Textarea label="Comments" rows={5} {...form.getInputProps("comments")}/>
               </Grid.Col>
               <Grid.Col span={12}>
                 <Group justify="flex-end" gap='sm'>

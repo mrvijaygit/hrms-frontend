@@ -140,6 +140,21 @@ export default function AppraisalCycle() {
     }
   }
 
+  const handleActive = (event:React.ChangeEvent<HTMLInputElement>, id:number) =>{
+    if(event.target.checked){
+       try{
+          (async()=>{
+            let promise = await protectedApi.post("/performance/saveAppraisalCycle", JSON.stringify({"appraisal_cycle_id":id, is_active:1}));
+            alert.success(promise.data.msg);
+            setTriggerApi((prev) => (prev == false) ? true : false);
+          })();
+       }
+       catch(err:any){
+          alert.error(err);
+       }
+    }
+  }
+
   const columns:Column<TableDataType>[] = useMemo(() => [
     {
       Header:'#',
@@ -164,25 +179,17 @@ export default function AppraisalCycle() {
       accessor:"is_active",
       width: 150,
       disableSortBy:true,
+      headerClassName:"text-center",
       Cell:({row, value})=>{
-        console.log(value);
-        return <Switch checked={value} disabled={row.original.appraisal_status_id == 3 ? true : false}/>;
-      }
-    },
-    {
-      Header:'Rating',
-      accessor:"is_rating",
-      width: 150,
-      disableSortBy:true,
-      Cell:({row, value})=>{
-        return <Switch checked={value} disabled={row.original.appraisal_status_id == 3 ? true : false}/>;
+        return <Group justify='center'><Switch checked={value} disabled={row.original.appraisal_status_id == 3 ? true : false} onChange={(event)=>handleActive(event, row.original.appraisal_cycle_id)} /></Group>;
       }
     },
     {
       Header:'Status',
       accessor:'appraisal_status',
       width: 150,
-      sortDirection: sort.accessor === 'appraisal_status' ? sort.direction : 'none'
+      sortDirection: sort.accessor === 'appraisal_status' ? sort.direction : 'none',
+      headerClassName:"text-center"
     },
     {
       Header:'Action',

@@ -1,7 +1,7 @@
 import { useDisclosure } from '@mantine/hooks';
-import { Box, Button, Drawer, Grid, Group, Pagination, Paper,Select,Text,Title } from "@mantine/core";
+import { Box, Button, ComboboxData, Drawer, Grid, Group, Pagination, Paper,Select,Text,Title } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { FaFileExcel, FaEye, FaPlus, FaXmark, FaFloppyDisk} from "react-icons/fa6";
+import { FaFileExcel, FaEye, FaPlus, FaXmark, FaFloppyDisk, FaAngleLeft, FaTrash, FaCheck} from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
 import { useForm } from "@mantine/form";
@@ -11,7 +11,7 @@ import { UseAppraisee } from '../../contextapi/GenericContext';
 import { excelDownload , directionAccessor} from '../../utils/helper';
 import type { SortingType } from '../../types/Generic';
 import type {FormType, TableDataType } from '../../types/AppraiseeList';
-import { useNavigate } from "react-router-dom";
+import { useNavigate , useLocation} from "react-router-dom";
 import CustomSelect from "../../components/CustomSelect";
 
 export default function AppraiseeList() {
@@ -23,16 +23,16 @@ export default function AppraiseeList() {
     const [triggerApi, setTriggerApi] = useState<Boolean>(true);
     const [sort, setSort] = useState({} as SortingType);
     const navigate = useNavigate();
+    const location = useLocation();
+    const [employees, setEmployees] = useState<ComboboxData | null>(null);
 
     const form = useForm<FormType>({
       initialValues:{
         appraisee_id:-1,
         user_login_id:null,
-        status_id:null,
       },
       validate:{
         user_login_id: (value) => (value != null ? null : "Required"),
-        status_id: (value) => (value != null ? null : "Required"),
       }
     });
 
@@ -56,44 +56,44 @@ export default function AppraiseeList() {
     }, []);
 
     useEffect(()=>{
-        // (async()=>{
-        // try{
-        //     let response = await protectedApi.get("/performance/appraiseelist", {
-        //     params:{
-        //         currentpage:state.page,
-        //         postperpage:Number(state.show),
-        //         sorting:sort
-        //     }
-        //     });
-        //     dispatch({type:"response", payload:{
-        //     data:response.data.data,
-        //     totalRecord:response.data.totalRecord
-        //     }});
-        // }
-        // catch(err:any){
-        //     alert.error(err);
-        // }
-        // })()
+      (async()=>{
+          try{
+            let resolve = await protectedApi.get('/master/employeeList', {
+              params:{
+                'appraisal_cycle_id':location?.state?.appraisal_cycle_id
+              }
+            }); 
+            setEmployees(resolve.data);
+          }
+          catch(err:any){
+            alert.error(err);
+          }
+      })();
+    },[triggerApi]);
+
+    useEffect(()=>{
+        (async()=>{
+          try{
+              let response = await protectedApi.get("/performance/appraiseelist", {
+              params:{
+                  currentpage:state.page,
+                  postperpage:Number(state.show),
+                  sorting:sort,
+                  appraisal_cycle_id:location?.state?.appraisal_cycle_id
+              }
+              });
+              dispatch({type:"response", payload:{
+                data:response.data.data,
+                totalRecord:response.data.totalRecord
+              }});
+          }
+          catch(err:any){
+              alert.error(err);
+          }
+        })()
     
     },[state.page, state.show, sort, triggerApi]);
 
-    const handleEdit = async(id:number) =>{
-        try{
-          let data = state?.data.filter(obj => obj.appraisee_id == id)[0];
-          let obj:FormType = {
-            appraisee_id:data.appraisee_id,
-            user_login_id:data.user_login_id,
-            status_id:data.status_id,
-          };
-          dispatch({type:"isUpdated", payload:{is_updated:true, editData:obj}});
-          form.setValues(obj);
-          open();
-        }
-        catch(error:any){
-          alert.error(error);
-        }
-    }
-  
     const handleClearReset = () =>{
       if(state.is_updated && state.editData != null){
         form.setValues({...state.editData});
@@ -105,7 +105,7 @@ export default function AppraiseeList() {
   
     const handleSubmit = async(values:FormType) =>{
       try{
-        let promise = await protectedApi.post("/performance/saveAppraisalCycle", JSON.stringify(values));
+        let promise = await protectedApi.post("/performance/saveAppraiseelist", JSON.stringify({...values, 'appraisal_cycle_id':location?.state?.appraisal_cycle_id}));
         alert.success(promise.data.msg);
         form.reset();
         dispatch({type:"isUpdated", payload:{is_updated:false, editData:null}});
@@ -121,7 +121,7 @@ export default function AppraiseeList() {
       try{
         alert.question("Do you Want to delete this record").then(async(res)=>{
           if(res.isConfirmed){
-            let promise = await protectedApi.post("/performance/saveAppraisalCycle", JSON.stringify({"appraisee_id":id, "is_deleted":1}));
+            let promise = await protectedApi.post("/performance/saveAppraiseelist", JSON.stringify({"appraisee_id":id, "is_deleted":1}));
             alert.success(promise.data.msg);
             setTriggerApi((prev) => (prev == false) ? true : false);
           }
@@ -142,11 +142,11 @@ export default function AppraiseeList() {
         {
             Header:'Employee',
             accessor:'user_name',
-            width:250,
+            width:200,
             Cell:({row, value}) => {
                 return <>
                     <Text mb={4}>{value}</Text>
-                    <Text>{row.original.designation_name}</Text>
+                    <Text fz={13} c='dimmed'>{row.original.designation_name}</Text>
                 </>
             },
             sortDirection: sort.accessor === 'user_name' ? sort.direction : 'none'
@@ -166,24 +166,25 @@ export default function AppraiseeList() {
         {
             Header:'Score',
             accessor:"overall_score",
-            width: 150,
+            width: 100,
             disableSortBy:true
         },
         {
             Header:'Status',
             accessor:"status",
-            width: 150,
+            width: 100,
+            headerClassName:"text-center",
             disableSortBy:true
         },
         {
             Header:'Action',
-            width: 150,
+            width: 100,
             headerClassName:"text-center",
+            disableSortBy:true,
             Cell:({row})=>{
                 return <Group gap='xs' justify='center'>
                     <Button variant='light' color='green' onClick={()=>navigate('/performance/myreview', {state:{'appraisal_cycle_id':row.original.appraisal_cycle_id}})}><FaEye/></Button>
-                    <Button variant='light' onClick={()=>handleEdit(row.original.appraisee_id)}><FaEye/></Button>
-                    <Button variant='light' color='red' onClick={()=>handleDelete(row.original.appraisee_id)}><FaEye/></Button>
+                    <Button variant='light' color='red' onClick={()=>handleDelete(row.original.appraisee_id)}><FaTrash/></Button>
                 </Group>;
         }
         },
@@ -203,6 +204,7 @@ export default function AppraiseeList() {
                 <Group align="center" gap='xs'>
                     <Button leftSection={<FaPlus/>} onClick={open}>Add</Button>
                     <Button leftSection={<FaFileExcel/>} color='green' onClick={()=>excelDownload("leaveType")}>Excel</Button>
+                    <Button leftSection={<FaAngleLeft/>} onClick={()=>navigate(-1)} color='dark.6'>Back</Button>
                 </Group>
                 </Group>
             </Paper>
@@ -219,17 +221,12 @@ export default function AppraiseeList() {
                 </Group>
             </Paper>
             <Drawer opened={opened} onClose={()=>{form.reset(); close(); dispatch({type:"isUpdated", payload:{is_updated:false, editData:null}});}} title={state.is_updated ? "Update Appraisee"  : "Add Appraisee"} closeOnClickOutside={false} position="right" offset={8} radius="sm">
-                    <Box component="form" onSubmit={form.onSubmit(values => handleSubmit(values))}>
+                  {
+                    employees != null ? employees.length == 0 ? <Text>All Employee Include in this Appraisal Cycle</Text>
+                    :    <Box component="form" onSubmit={form.onSubmit(values => handleSubmit(values))}>
                     <Grid gutter='sm' align='flex-end'>
                         <Grid.Col span={12}>
-                            <CustomSelect data={[]} label="Employee" {...form.getInputProps('user_login_id')}/>
-                        </Grid.Col>
-                        <Grid.Col span={12}>
-                            <CustomSelect data={[
-                            {value:"1", "label":"Start"},
-                            {value:"2", "label":"Inprogess"},
-                            {value:"3", "label":"Completed"},
-                            ]} label="Status" {...form.getInputProps('appraisal_status_id')}/>
+                          <CustomSelect data={employees !} label="Employee" {...form.getInputProps('user_login_id')}/>
                         </Grid.Col>
                         <Grid.Col span={12}>
                             <Group justify="flex-end" gap='sm'>
@@ -238,7 +235,11 @@ export default function AppraiseeList() {
                             </Group>
                         </Grid.Col>
                     </Grid>
-                    </Box>
+                  </Box> : ""
+                  }
+
+                 
+
             </Drawer>
         </>
     )

@@ -7,16 +7,17 @@ import BasicTable from "../../components/Table/BasicTable";
 import { useForm } from "@mantine/form";
 import { protectedApi } from '../../utils/ApiService';
 import { alert } from '../../utils/Alert';
-import { UseTeam } from '../../contextapi/TeamContext';
+import { UseTeam } from '../../contextapi/GenericContext';
 import type { FormType, TableDataType } from '../../types/Team';
 import { useAppSelector } from '../../redux/hook';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import CustomSelect from '../../components/CustomSelect';
 type sortingType = { direction: string, accessor: string};
 
 export default function Tasks() {
-  
-  const logger_user_login_id = useAppSelector(state => state.user.user_login_id);
   const location = useLocation();
+  const navigate = useNavigate();
+  const logger_user_login_id = useAppSelector(state => state.user.user_login_id);
   const [employees , setEmployees] = useState<ComboboxData | null>(null);
   const [projects , setProjects] = useState<ComboboxData | null>(null);
   const [tableHeight, setTableHeight] = useState<number>(400);
@@ -25,6 +26,7 @@ export default function Tasks() {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [triggerApi, setTriggerApi] = useState<Boolean>(true);
+  const [selfTrigger, setSelfTrigger] = useState<Boolean>(true);
   const {state, dispatch}  = UseTeam();
   const [sort, setSort] = useState({} as sortingType);
 
@@ -67,8 +69,8 @@ export default function Tasks() {
             selected_id: location.state != null ?  location.state.project_id : null
           }
         });
-        dispatch({type:"filter", payload:{'key':"project_id",'value':projectResponse.data.selected_id}})
         setProjects(projectResponse.data.data);
+        dispatch({type:"filter", payload:{'key':"project_id",'value':projectResponse.data.selected_id}});
         let response = await protectedApi.get('/master/userList', {
             params:{
               reporting_id: logger_user_login_id
@@ -83,14 +85,14 @@ export default function Tasks() {
   },[]);
 
   useEffect(()=>{
-    if(state.filter.project_id != null){
+    if(state?.filter?.project_id != null){
       (async()=>{
         try{
           let response = await protectedApi.get("/project/teamMembers", {
             params:{
               currentpage:state.page,
               postperpage:Number(state.show),
-              project_id:state.filter.project_id,
+              project_id:state?.filter?.project_id,
               sorting:sort
             }
           });
@@ -98,14 +100,15 @@ export default function Tasks() {
             data:response.data.data,
             totalRecord:response.data.totalRecord
           }});
+          setSelfTrigger((prev) => (prev == false) ? true : false);
         }
-        catch(err){
-  
+        catch(err:any){
+          alert.error(err, true);
         }
       })();
     }
   
-  },[state.page, state.show, triggerApi, sort, state.filter.project_id]);
+  },[state.page, state.show, triggerApi, sort, state?.filter?.project_id]);
 
   const handleEdit = async(id:number) =>{
     const data = state?.data.filter(obj => obj.project_member_id == id)[0];
@@ -130,7 +133,7 @@ export default function Tasks() {
 
   const handleSubmit = async(values:FormType) =>{
     try{
-      let promise = await protectedApi.post("/project/saveTeamMember", JSON.stringify({...values, "project_id":state.filter.project_id}));
+      let promise = await protectedApi.post("/project/saveTeamMember", JSON.stringify({...values, "project_id":state?.filter?.project_id}));
       alert.success(promise.data.msg);
       form.reset();
       dispatch({type:"isUpdated", payload:{is_updated:false, editData:null}});
@@ -155,6 +158,10 @@ export default function Tasks() {
     catch(error:any){
       alert.error(error);
     }
+  }
+
+  const handleView = (id:number)=>{
+    navigate('/projects/timesheets', {state:{"project_id":state?.filter?.project_id, "project_member_id":id}});
   }
 
   const columns:Column<TableDataType>[] = useMemo(() => [
@@ -183,7 +190,7 @@ export default function Tasks() {
       disableSortBy:true,
       headerClassName:"text-center",
       sortDirection: sort.accessor === 'timesheet_entries' ? sort.direction : 'none',
-      Cell:({value}) => <Button variant='light' onClick={()=>{}}>{value}</Button>
+      Cell:({row,value}) => <Button variant='light' onClick={()=>{value == 0 ? '' : handleView(row.original.project_member_id)}}>{value}</Button>
     },
     {
       Header:'Timesheet Hours',
@@ -192,12 +199,13 @@ export default function Tasks() {
       disableSortBy:true,
       headerClassName:"text-center",
       sortDirection: sort.accessor === 'timesheet_hours' ? sort.direction : 'none',
-      Cell:({value}) => <Button variant='light' onClick={()=>{}}>{value}</Button>
+      Cell:({value}) => <Text>{value == null ? "-" : `${value.split(':')[0]}:${value.split(':')[1]}`}</Text>
     },
     {
       Header:'Action',
       width: 100,
       headerClassName:"text-center",
+      disableSortBy:true,
       Cell:({row})=>{
           return <Group gap='xs' justify='center'>
             <Button variant='light' onClick={()=>handleEdit(row.original.project_member_id)}><FaPencil/></Button>
@@ -205,7 +213,7 @@ export default function Tasks() {
           </Group>;
       }
     },
-  ], [sort]);
+  ], [sort, selfTrigger]);
 
   const data:TableDataType[] = useMemo(()=>state.data, [state.data]);
 
@@ -237,8 +245,8 @@ export default function Tasks() {
       <Paper p='xs' shadow='xs' mb='xs' ref={filterRef}>
         <Grid gutter='xs'>
           <Grid.Col span={{lg:3, md:6}}>
-            <Select size='xs' label='Select Projects' data={projects != null ? projects : []} 
-            value={state?.filter.project_id} 
+            <CustomSelect size='xs' label='Select Projects' data={projects != null ? projects : []} 
+            value={state?.filter?.project_id} 
             onChange={(value) => dispatch({type:"filter", payload:{'key':"project_id",'value':value}})}/>
           </Grid.Col>
         </Grid>

@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {FaClock, FaFileExcel, FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
-import { useForm } from "@mantine/form";
+import { useForm, zodResolver } from "@mantine/form";
 import { protectedApi } from '../../utils/ApiService';
 import { alert } from '../../utils/Alert';
 import { UseTasks } from '../../contextapi/GenericContext';
@@ -12,12 +12,15 @@ import { excelDownload , directionAccessor} from '../../utils/helper';
 import type { SortingType } from '../../types/Generic';
 import type { FormType, TableDataType } from '../../types/Tasks';
 import { DatePickerInput } from '@mantine/dates';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import CustomSelect from '../../components/CustomSelect';
-import { FaTimes } from 'react-icons/fa';
+import { TaskSchema } from '../../utils/Validation';
+
 
 export default function Tasks() {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const [tableHeight, setTableHeight] = useState<number>(400);
   const topRef = useRef<HTMLDivElement | null>(null);
   const filterRef = useRef<HTMLDivElement | null>(null);
@@ -36,17 +39,12 @@ export default function Tasks() {
       task_id:-1,
       task_name:"",
       task_description:"",
-      task_date:[null,null],
+      start_date:null,
+      end_date:null,
       task_status_id:null,
       projected_hours:0
     },
-    validate:{
-      task_name: (value) => (value.trim().length > 4 ? null : "Required"),
-      task_description: (value) => (value.trim().length > 4 ? null : "Required"),
-      task_date: (value) => (value[0] != null ? null : 'Required'),
-      task_status_id: (value) => (value != null ? null : 'Required'),
-      projected_hours: (value) => (value > 0 ? null : 'Required'),
-    }
+    validate:zodResolver(TaskSchema)
   });
 
   useLayoutEffect(() => {
@@ -121,7 +119,8 @@ export default function Tasks() {
           task_id:data.task_id,
           task_name:data.task_name,
           task_description:data.task_description,
-          task_date:[new Date(data.start_date), new Date(data.end_date)],
+          start_date:new Date(data.start_date),
+          end_date:new Date(data.end_date),
           task_status_id:data.task_status_id,
           projected_hours:data.projected_hours
         };
@@ -175,7 +174,7 @@ export default function Tasks() {
   }
 
   const handleView = (id:number)=>{
-    
+    navigate('/projects/timesheets', {state:{"project_id":state?.filter?.project_id, "task_id":id}});
   }
 
   const columns:Column<TableDataType>[] = useMemo(() => [
@@ -199,9 +198,9 @@ export default function Tasks() {
     },
     {
       Header:'Status',
-      accessor:"task_status",
+      accessor:"project_status",
       width: 130,
-      sortDirection: sort.accessor === 'task_status' ? sort.direction : 'none',
+      sortDirection: sort.accessor === 'project_status' ? sort.direction : 'none',
       Cell:({row, value}) => <Text c={row.original.status_color}>{value}</Text>
     },
     {
@@ -222,20 +221,21 @@ export default function Tasks() {
       width: 130,
       disableSortBy:true,
       headerClassName:"text-center",
-      Cell:({value}) => <Button variant='light' onClick={()=>{}}>{value}</Button>
+      Cell:({value}) => <Text>{value}hr</Text>
     },
     {
       Header:'Spent Time',
-      accessor:"spent_time",
+      accessor:"task_duration",
       width: 130,
       disableSortBy:true,
       headerClassName:"text-center",
-      Cell:({value}) => <Button variant='light' onClick={()=>{}}>{value}</Button>
+      Cell:({value}) => value != null ? <Text>{value.split(':')[0]}:{value.split(':')[1]}</Text> : '-'
     },
     {
       Header:'Action',
       width: 130,
       headerClassName:"text-center",
+      disableSortBy:true,
       Cell:({row})=>{
           return <Group gap='xs' justify='center'>
             <Tooltip label="Timesheet" withArrow position="bottom"><Button variant='light' color='green' onClick={()=>handleView(row.original.task_id)}><FaClock/></Button></Tooltip>
@@ -299,8 +299,11 @@ export default function Tasks() {
               <Grid.Col span={12}>
                 <Textarea label="Description" rows={6} maxLength={255} {...form.getInputProps("task_description")}/>
               </Grid.Col>
-              <Grid.Col span={12}>
-                <DatePickerInput type='range' label="Date" {...form.getInputProps("task_date")}/>
+              <Grid.Col span={6}>
+                <DatePickerInput label="Start Date" {...form.getInputProps("start_date")}/>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <DatePickerInput label="End Date" {...form.getInputProps("end_date")}/>
               </Grid.Col>
               <Grid.Col span={6}>
                 <NumberInput label="Projected Hours" maxLength={3} placeholder='Enter Hrs' {...form.getInputProps("projected_hours")}/>
