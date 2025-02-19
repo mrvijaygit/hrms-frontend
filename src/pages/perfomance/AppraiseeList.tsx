@@ -1,7 +1,7 @@
 import { useDisclosure } from '@mantine/hooks';
 import { Box, Button, ComboboxData, Drawer, Grid, Group, Pagination, Paper,Select,Text,Title } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { FaFileExcel, FaEye, FaPlus, FaXmark, FaFloppyDisk, FaAngleLeft, FaTrash, FaCheck} from "react-icons/fa6";
+import { FaFileExcel, FaEye, FaPlus, FaXmark, FaFloppyDisk, FaAngleLeft, FaTrash} from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
 import { useForm } from "@mantine/form";

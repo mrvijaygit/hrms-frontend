@@ -1,4 +1,4 @@
-import {ComboboxData, Flex, Grid, Paper,Text} from "@mantine/core"
+import {ComboboxData, Grid, Paper} from "@mantine/core"
 import { UseMyReview } from "../../contextapi/MyReviewContext";
 import { useEffect, useState } from "react";
 import { protectedApi } from "../../utils/ApiService";

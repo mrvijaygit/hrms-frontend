@@ -4,7 +4,8 @@ import { formType as attendanceFormType } from "./Attendance";
 import { Dispatch } from "react";
 
 interface holidayTypeModify extends Omit<holidayFormType, "holiday_date">{
-    holiday_date: string
+    holiday_date: string;
+    holiday_day:string;
 }
 
 interface attendanceType extends Omit<attendanceFormType, "user_login_id">{

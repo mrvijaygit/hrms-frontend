@@ -33,27 +33,6 @@ export default function Goal() {
     }
   });
 
-  const handleEdit = async(id:number) =>{
-      try{
-        let data = state?.data.filter(obj => obj.goal_id == id)[0];
-
-        let obj:FormType = {
-            goal_id:data.goal_id,
-            goal_name:data.goal_name,
-            goal_date:[new Date(data.start_date), new Date(data.end_date)],
-            description:data.description,
-            weightage:data.weightage,
-            progress:data.progress
-        };
-        dispatch({type:"isUpdated", payload:{is_updated:true, editData:obj}});
-        form.setValues(obj);
-        open();
-      }
-      catch(error:any){
-        alert.error(error);
-      }
-  }
-
   const handleClearReset = () =>{
     if(state.is_updated && state.editData != null){
       form.setValues({...state.editData});
