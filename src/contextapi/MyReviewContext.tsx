@@ -4,11 +4,10 @@ import MyReviewReducer from "../reducers/MyReviewReducer";
 const Context = createContext({} as ContextType);
 
 const initialValues:stateType = {
-    data:[],
-    is_updated:false,
-    editData:null,
+    data:null,
     filter:{
-       appraisal_cycle_id:null
+       appraisal_cycle_id:null,
+       status_id:null
     }
 }
 

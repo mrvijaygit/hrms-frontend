@@ -5,10 +5,11 @@ import { MyReviewSchema } from "../../utils/Validation";
 import { alert } from "../../utils/Alert";
 import { protectedApi } from "../../utils/ApiService";
 import { useAppSelector } from "../../redux/hook";
+import { UseMyReview } from "../../contextapi/MyReviewContext";
 
 interface Response {
     compentency_id:number;
-    user_rating: number;
+    user_rating: number | string;
     user_comment: string;
     self_appraisal_id:number;
  }
@@ -21,22 +22,24 @@ export default function ReviewForm({questions}:{questions:TableDataType[]}) {
 
    const user_login_id =  useAppSelector(state => state.user.user_login_id);
 
+   const {state, dispatch}  = UseMyReview();
+
     const form = useForm<FormValues>({
         initialValues: {
-            responses: questions.map((item) => ({ user_rating: 0, user_comment: '', compentency_id:item.compentency_id,  self_appraisal_id:-1 })) as Response[], 
+            responses: questions.map((item) => ({ user_rating: "", user_comment: '', compentency_id:item.compentency_id,  self_appraisal_id:-1 })) as Response[], 
         },
         validate:zodResolver(MyReviewSchema)
     });
 
     const handleSubmit = (values:FormValues) =>{
-        console.log(values);
         alert.question("Are you sure do you Submit your Appraisal?").then(async(res)=>{
             if(res.isConfirmed){
                 try{
-                    let promise = await protectedApi.post("/performance/saveSelfAppraisal", JSON.stringify({...values, "user_login_id":user_login_id}));
+                    let promise = await protectedApi.post("/performance/saveSelfAppraisal", 
+                      JSON.stringify({...values, "user_login_id":user_login_id, "status_id":2, "appraisee_id":state?.data?.appraisee_id}));
                     alert.success(promise.data.msg);
                     form.reset();
-                    // dispatch({type:"isUpdated", payload:{is_updated:false, editData:null}});
+                    dispatch({type:"trigger", payload:!state.trigger});
                 }
                 catch(err:any){
                     alert.error(err);

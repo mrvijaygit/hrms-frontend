@@ -30,7 +30,7 @@ function AdminCard(){
         <>
             <SimpleGrid cols={{xs: 2, md: 3 }} spacing="xs" verticalSpacing="xs" h='100%'>
             {
-                state.adminCard != null &&  state.adminCard.map((item)=>{
+                state.adminCard != null &&  state?.adminCard?.map((item)=>{
                 return <Card key={item.id} {...item}/>
                 })
             }

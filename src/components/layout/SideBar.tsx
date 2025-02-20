@@ -85,7 +85,7 @@ function SideBar() {
       group: [
         { label: 'Appraisal Cycle', link: '/performance/appraisalcycle', id:19, access:[1000]},
         { label: 'Competency', link: '/performance/competency', id:20, access:[1000]},
-        { label: 'My Review', link: '/performance/myreview', id:21, access:[1000,100, 20 ,1]},
+        { label: 'My Review', link: '/performance/myreview', id:21, access:[100, 20 ,1]},
       ],
       group_access:[1000,100,20,1]
     }
