@@ -8,7 +8,8 @@ const initialValues:stateType = {
     filter:{
        appraisal_cycle_id:null,
        status_id:null
-    }
+    },
+    trigger:true
 }
 
 export default function MyReviewContext({children}:PropsWithChildren){

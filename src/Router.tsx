@@ -86,10 +86,11 @@ export default function Router(){
 
                 <Route path='/employees/list/profile' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><Profile /></RequiredAuth>} />
 
-                <Route path='/performance/appraisalcycle' element={<RequiredAuth m_user_type_id={[1000]}><ACycleContext><AppraisalCycle /></ACycleContext></RequiredAuth>} />
+                <Route path='/performance/appraisalcycle' element={<RequiredAuth m_user_type_id={[1000,100,20]}><ACycleContext><AppraisalCycle /></ACycleContext></RequiredAuth>} />
                 <Route path='/performance/appraisalcycle/appraiseelist' element={<RequiredAuth m_user_type_id={[1000,100,20]}><AppraiseeContext><AppraiseeList /></AppraiseeContext></RequiredAuth>} />
                 <Route path='/performance/competency' element={<RequiredAuth m_user_type_id={[1000]}><CompetencyContext><Competency /></CompetencyContext></RequiredAuth>} />
                 <Route path='/performance/myreview' element={<RequiredAuth m_user_type_id={[1000,100,20,1]}><MyReviewContext><MyReview /></MyReviewContext></RequiredAuth>} />
+                <Route path='/performance/appraisalcycle/myreview' element={<RequiredAuth m_user_type_id={[1000,100,20,1]}><MyReviewContext><MyReview /></MyReviewContext></RequiredAuth>} />
             </Route>
 
         </Routes>

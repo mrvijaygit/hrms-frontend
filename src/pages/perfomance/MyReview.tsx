@@ -1,16 +1,17 @@
-import { Button, ComboboxData, Flex, Grid, Paper, Text} from "@mantine/core"
+import { Button, ComboboxData, Flex, Grid, Group, Paper, Text, Title} from "@mantine/core"
 import { UseMyReview } from "../../contextapi/MyReviewContext";
 import { useEffect, useState } from "react";
 import { protectedApi } from "../../utils/ApiService";
 import { alert } from "../../utils/Alert";
 import CustomSelect from "../../components/CustomSelect";
-import type { TableDataType } from "../../types/Competency";
+import type { TableDataType } from "../../types/SelfAppraisal";
 
-import ReviewForm from "./ReviewForm";
+import Questions from "./Questions";
 import BasicAppraiseeDetail from "./BasicAppraiseeDetail";
 import { useLocation , useNavigate} from "react-router-dom";
 import { useAppSelector } from "../../redux/hook";
 import { FaAngleLeft } from "react-icons/fa6";
+import QuestionsAndAnswer from "./QuestionsAndAnswer";
 
 export default function MyReview() {
   const location = useLocation();
@@ -26,7 +27,8 @@ export default function MyReview() {
           try{
             let resolve = await protectedApi.get('/master/appraisalCycle', {
               params:{
-                appraisal_cycle_id:location?.state?.appraisal_cycle_id 
+                appraisal_cycle_id:location?.state?.appraisal_cycle_id,
+                user_login_id:location?.state?.user_login_id || user_login_id
               }
             }); 
             setAppraisalCycle(resolve.data.data);
@@ -66,10 +68,15 @@ export default function MyReview() {
   },[state?.filter?.appraisal_cycle_id, state?.trigger]);
 
   useEffect(()=>{
-    if(state?.filter?.status_id == 1){
+    if(state?.filter?.status_id != null){
       (async()=>{
         try{
-            let response = await protectedApi.get("/performance/questions");
+            let response = await protectedApi.get("/performance/questions", {
+              params:{
+                appraisal_cycle_id:state?.filter?.appraisal_cycle_id,
+                user_login_id:location?.state?.user_login_id || user_login_id
+              }
+            });
             setQuestions(response.data);
         }
         catch(err:any){
@@ -78,6 +85,7 @@ export default function MyReview() {
         })();
     }
   },[state?.filter?.status_id]);
+
   
   return (
     <>
@@ -86,9 +94,11 @@ export default function MyReview() {
           <Grid.Col span={{lg:3, md:4}}>
               <CustomSelect size="xs" data={appraisalCycle != null ? appraisalCycle : []} value={state?.filter.appraisal_cycle_id} onChange={(value) => dispatch({type:"filter", payload:{"key":"appraisal_cycle_id", "value":value}})}/>
           </Grid.Col>
-          <Grid.Col span={{lg:3, md:4}} ta='end'>
+          {
+            state?.data?.user_login_id != user_login_id  &&  <Grid.Col span={{lg:3, md:4}} ta='end'>
               <Button leftSection={<FaAngleLeft/>} onClick={()=>navigate(-1)} color='dark.6'>Back</Button>
-          </Grid.Col>
+            </Grid.Col>
+          }
         </Grid>
       </Paper>
         {
@@ -96,7 +106,17 @@ export default function MyReview() {
           : <Flex justify='center' align="center"><Text>You are not included in this appraisal cycle</Text></Flex> 
         }
         {
-          state?.filter?.status_id == 1 && questions != null &&  <ReviewForm questions={questions}/>
+          state?.filter?.status_id == 1 && questions != null && 
+          <>
+            {
+              state?.data?.user_login_id == user_login_id ? <Questions questions={questions}/> : 
+              <Group align="center" justify="center" h={300}><Title order={5} c='dimmed'>Waiting For Self Review</Title></Group>
+            }
+          </>
+         
+        }
+        {
+          state?.filter?.status_id != null && state.filter.status_id >= 2 && questions != null &&  <QuestionsAndAnswer questions={questions}/>
         }
     </>
   )

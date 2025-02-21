@@ -1,4 +1,4 @@
-import {Box, Divider, Flex, Grid,Group,Text, useMantineTheme } from "@mantine/core"
+import {Divider, Grid,Rating,Text, useMantineTheme } from "@mantine/core"
 import { UseMyReview } from "../../contextapi/MyReviewContext";
 
 function BasicAppraiseeDetail() {
@@ -8,18 +8,19 @@ function BasicAppraiseeDetail() {
     
   return (
    <>
-
-        <Flex gap='xs' align='center' justify='space-between'>
-            <Box>
+        <Grid>
+            <Grid.Col span={{md:6}}>
                 <Text c={theme.primaryColor} fw={500}>{state?.data?.user_name} - ({state?.data?.appraisal_cycle_dates})</Text>
-                <Text fz='xs' c='dimmed'>{state?.data?.designation_name}</Text>
-            </Box>
-            <Text component="span" fw={500}>{state?.data?.status}</Text>
-            <Group align="center" gap='xs'>
-                <Text fz="xs" c='dark.3' tt="uppercase" >Final Rating</Text>
-                <Text component="span" fw={500}>{state?.data?.overall_score}</Text>
-            </Group>
-        </Flex>
+                <Text fz='xs' c='dimmed'>{state?.data?.designation_name} - <Text fz='xs' component="span" c='green'>{state?.data?.status}</Text> </Text>
+            </Grid.Col>
+            <Grid.Col span={{md:3, sm:6}}>
+                <Text fz="xs" c='dark.3' tt="uppercase">Self Rating</Text> <Rating value={state?.data?.self_score} fractions={2} readOnly />
+            </Grid.Col>
+            <Grid.Col span={{md:3, sm:6}}>
+                <Text fz="xs" c='dark.3' tt="uppercase">Final Rating</Text> <Rating  value={state?.data?.is_publish == 1 ? state?.data?.overall_score : 0} fractions={2} readOnly />
+            </Grid.Col>
+        </Grid>
+
         <Divider variant="dashed" my='xs'/>
         <Grid>
             <Grid.Col span={{md:3}}>

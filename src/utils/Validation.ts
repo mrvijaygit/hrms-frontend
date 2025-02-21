@@ -28,7 +28,7 @@ export const TimeSheetSchema = z.object({
     path: ['start_date'],
 });
 
-export const MyReviewSchema = z.object({
+export const QuestionSchema = z.object({
     responses: z.array(
       z.object({
         user_rating: z
@@ -38,4 +38,15 @@ export const MyReviewSchema = z.object({
         user_comment: z.string().min(1, 'Comment is required'),
       })
     ),
-  });
+});
+export const QuestionAndAnswerSchema = z.object({
+    responses: z.array(
+      z.object({
+        reviewer_rating: z
+          .number()
+          .min(1, 'Rating must be at least 1')
+          .max(5, 'Rating cannot exceed 5'),
+        reviewer_comment: z.string().min(1, 'Comment is required'),
+      })
+    ),
+});

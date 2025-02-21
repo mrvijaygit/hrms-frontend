@@ -14,6 +14,7 @@ import type { SortingType } from '../../types/Generic';
 import type { FormType, TableDataType } from '../../types/AppraisalCycle';
 import CustomSelect from '../../components/CustomSelect';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../redux/hook';
 
 export default function AppraisalCycle() {
   const [tableHeight, setTableHeight] = useState<number>(400);
@@ -26,6 +27,7 @@ export default function AppraisalCycle() {
   const [sort, setSort] = useState({} as SortingType);
 
   const navigate = useNavigate();
+  const m_user_type_id = useAppSelector(state => state.user.m_user_type_id);
 
   const form = useForm<FormType>({
     initialValues:{
@@ -142,17 +144,22 @@ export default function AppraisalCycle() {
 
   const handleActive = (event:React.ChangeEvent<HTMLInputElement>, id:number) =>{
     if(event.target.checked){
-       try{
-          (async()=>{
-            let promise = await protectedApi.post("/performance/saveAppraisalCycle", JSON.stringify({"appraisal_cycle_id":id, is_active:1}));
-            alert.success(promise.data.msg);
-            setTriggerApi((prev) => (prev == false) ? true : false);
-          })();
-       }
-       catch(err:any){
-          alert.error(err);
-       }
+        alert.question("Are you Sure do you want to change the period").then((res)=>{
+          if(res.isConfirmed){
+            try{
+              (async()=>{
+                let promise = await protectedApi.post("/performance/saveAppraisalCycle", JSON.stringify({"appraisal_cycle_id":id, is_active:1}));
+                alert.success(promise.data.msg);
+                setTriggerApi((prev) => (prev == false) ? true : false);
+              })();
+           }
+           catch(err:any){
+              alert.error(err);
+           }
+          }
+        });
     }
+
   }
 
   const columns:Column<TableDataType>[] = useMemo(() => [
@@ -180,6 +187,7 @@ export default function AppraisalCycle() {
       width: 150,
       disableSortBy:true,
       headerClassName:"text-center",
+      visible:m_user_type_id == 1000 ? true : false,
       Cell:({row, value})=>{
         return <Group justify='center'><Switch checked={value} disabled={row.original.appraisal_status_id == 3 ? true : false} onChange={(event)=>handleActive(event, row.original.appraisal_cycle_id)} /></Group>;
       }
@@ -198,8 +206,13 @@ export default function AppraisalCycle() {
       Cell:({row})=>{
           return <Group gap='xs' justify='center'>
             <Button variant='light' color='green' onClick={()=>navigate('/performance/appraisalcycle/appraiseelist', {state:{'appraisal_cycle_id':row.original.appraisal_cycle_id}})}><FaEye/></Button>
-            <Button variant='light' onClick={()=>handleEdit(row.original.appraisal_cycle_id)}><FaPencil/></Button>
-            <Button variant='light' color="red" onClick={()=>handleDelete(row.original.appraisal_cycle_id)}><FaTrash/></Button>
+            {
+               m_user_type_id == 1000 &&  <>
+                  <Button variant='light' onClick={()=>handleEdit(row.original.appraisal_cycle_id)}><FaPencil/></Button>
+                  <Button variant='light' color="red" onClick={()=>handleDelete(row.original.appraisal_cycle_id)}><FaTrash/></Button>
+               </>
+            }
+
           </Group>;
       }
     },
@@ -216,10 +229,13 @@ export default function AppraisalCycle() {
       <Paper p='xs' mb='xs' shadow='xs' ref={topRef}>
         <Group align="center" justify="space-between" gap='xs'>
           <Title order={6} tt='uppercase'>Appraisal Cycle</Title>
-          <Group align="center" gap='xs'>
-            <Button leftSection={<FaPlus/>} onClick={open}>Add</Button>
-            <Button leftSection={<FaFileExcel/>} color='green' onClick={()=>excelDownload("appraisalcycle")}>Excel</Button>
-          </Group>
+          {
+            m_user_type_id == 1000 &&  <Group align="center" gap='xs'>
+              <Button leftSection={<FaPlus/>} onClick={open}>Add</Button>
+              <Button leftSection={<FaFileExcel/>} color='green' onClick={()=>excelDownload("appraisalcycle")}>Excel</Button>
+            </Group>
+          }
+
         </Group>
       </Paper>
       

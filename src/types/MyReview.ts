@@ -3,7 +3,8 @@ interface basic{
     appraisee_id: number;
     appraisal_cycle_id: number;
     user_login_id: number;
-    overall_score: number | null;
+    overall_score: number;
+    self_score: number;
     status_id: number;
     status: string;
     appraisal_name:string;
@@ -15,7 +16,9 @@ interface basic{
     designation_name:string;
     emp_code:string;
     date_of_joining:string;
+    reporting_id:number;
     reviewer_name:string;
+    is_publish:number;
 }
 export interface stateType{
     data:basic | null,

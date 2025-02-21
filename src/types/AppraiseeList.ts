@@ -11,5 +11,6 @@ export interface TableDataType extends FormType{
     designation_name:string;
     reviewer_name:string;
     overall_score:number;
+    self_score:number;
     status:string;
 }

@@ -167,7 +167,8 @@ export default function AppraiseeList() {
             Header:'Score',
             accessor:"overall_score",
             width: 100,
-            disableSortBy:true
+            disableSortBy:true,
+            headerClassName:"text-center"
         },
         {
             Header:'Status',
@@ -183,7 +184,7 @@ export default function AppraiseeList() {
             disableSortBy:true,
             Cell:({row})=>{
                 return <Group gap='xs' justify='center'>
-                    <Button variant='light' color='green' onClick={()=>navigate('/performance/myreview', {state:{'appraisal_cycle_id':row.original.appraisal_cycle_id, 'user_login_id':row.original.user_login_id}})}><FaEye/></Button>
+                    <Button variant='light' color='green' onClick={()=>navigate('/performance/appraisalcycle/myreview', {state:{'appraisal_cycle_id':row.original.appraisal_cycle_id, 'user_login_id':row.original.user_login_id}})}><FaEye/></Button>
                     <Button variant='light' color='red' onClick={()=>handleDelete(row.original.appraisee_id)}><FaTrash/></Button>
                 </Group>;
         }

@@ -1,42 +1,39 @@
 import {Button, Flex, NumberInput, Paper,Table,Text, Textarea} from "@mantine/core"
-import type { TableDataType } from "../../types/Competency";
 import { useForm, zodResolver } from "@mantine/form";
-import { MyReviewSchema } from "../../utils/Validation";
+import { QuestionSchema } from "../../utils/Validation";
 import { alert } from "../../utils/Alert";
 import { protectedApi } from "../../utils/ApiService";
 import { useAppSelector } from "../../redux/hook";
 import { UseMyReview } from "../../contextapi/MyReviewContext";
+import type { TableDataType, FormType} from "../../types/SelfAppraisal";
 
-interface Response {
-    compentency_id:number;
-    user_rating: number | string;
-    user_comment: string;
-    self_appraisal_id:number;
- }
-
- interface FormValues {
-    responses: Response[];
-  }
-
-export default function ReviewForm({questions}:{questions:TableDataType[]}) {
+export default function Questions({questions}:{questions:TableDataType[]}) {
 
    const user_login_id =  useAppSelector(state => state.user.user_login_id);
 
    const {state, dispatch}  = UseMyReview();
 
-    const form = useForm<FormValues>({
+    const form = useForm<FormType>({
         initialValues: {
-            responses: questions.map((item) => ({ user_rating: "", user_comment: '', compentency_id:item.compentency_id,  self_appraisal_id:-1 })) as Response[], 
+            responses: questions.map((item) => ({ user_rating: "", user_comment: '', compentency_id:item.compentency_id,  self_appraisal_id:-1 , appraisal_cycle_id:state?.data?.appraisal_cycle_id})), 
         },
-        validate:zodResolver(MyReviewSchema)
+        validate:zodResolver(QuestionSchema)
     });
 
-    const handleSubmit = (values:FormValues) =>{
+    const handleSubmit = (values:FormType) =>{
         alert.question("Are you sure do you Submit your Appraisal?").then(async(res)=>{
             if(res.isConfirmed){
+
                 try{
+
+                    // Calculate the overall rating
+                    const self_score = values.responses.reduce((sum, item) => {
+                        let x = questions.filter(obj => obj.compentency_id == item.compentency_id)[0];
+                        return sum + (Number(item.user_rating) * (Number(x.weightage) / 100));
+                    }, 0);
+
                     let promise = await protectedApi.post("/performance/saveSelfAppraisal", 
-                      JSON.stringify({...values, "user_login_id":user_login_id, "status_id":2, "appraisee_id":state?.data?.appraisee_id}));
+                      JSON.stringify({...values, "user_login_id":user_login_id, "status_id":2, "appraisee_id":state?.data?.appraisee_id, 'self_score':self_score}));
                     alert.success(promise.data.msg);
                     form.reset();
                     dispatch({type:"trigger", payload:!state.trigger});
@@ -77,7 +74,7 @@ export default function ReviewForm({questions}:{questions:TableDataType[]}) {
 
                         </Table.Td>
                         <Table.Td>
-                        <Textarea rows={4}   {...form.getInputProps(`responses.${index}.user_comment`)}/>
+                          <Textarea rows={4}   {...form.getInputProps(`responses.${index}.user_comment`)}/>
                         </Table.Td>
                     </Table.Tr>
                 })
