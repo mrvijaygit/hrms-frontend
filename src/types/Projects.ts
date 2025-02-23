@@ -15,7 +15,7 @@ export type TableDataType = Omit<FormType, 'start_date' | 'end_date'> & {
     end_date:string;
     members:number;
     tasks:number;
-    work_done:number;
+    work_done:string;
     project_status:string;
     status_color:string;
     department_name:string;

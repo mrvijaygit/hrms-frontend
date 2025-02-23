@@ -240,8 +240,9 @@ export default function List() {
       disableSortBy:true,
       headerClassName:"text-center",
       Cell:({value}) => <>
-        <Button variant='light' onClick={()=>{}}>{value}</Button>
+        <Button variant='light' onClick={()=>{}}>{value != null ? `${value.split(':')[0]}:${value.split(':')[1]}` : 0}</Button>
       </>
+
     },
     {
       Header:'Action',

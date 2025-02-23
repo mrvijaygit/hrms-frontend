@@ -10,6 +10,7 @@ import type { TableDataType, FormType } from "../../types/SelfAppraisal";
 export default function QuestionsAndAnswer({questions}:{questions:TableDataType[]}) {
     const theme = useMantineTheme();
    const user_login_id =  useAppSelector(state => state.user.user_login_id);
+   const m_user_type_id =  useAppSelector(state => state.user.m_user_type_id);
 
    const {state, dispatch}  = UseMyReview();
 
@@ -112,7 +113,7 @@ export default function QuestionsAndAnswer({questions}:{questions:TableDataType[
                                     </Table.Tr>
                                 }
                                 {
-                                    ((state?.data?.status_id == 3 && user_login_id == state?.data?.reporting_id) ||  state?.data?.is_publish == 1) && <Table.Tr>
+                                    ((state?.data?.status_id == 3 && user_login_id == state?.data?.reporting_id) ||  state?.data?.is_publish == 1 || [1000,100].includes(m_user_type_id)) && <Table.Tr>
                                              <Table.Th>
                                              <Group align="center" gap='xs'>
                                                  <Avatar color="blue" name={state?.data?.reviewer_name}/>
