@@ -1,7 +1,7 @@
 import { useDisclosure } from '@mantine/hooks';
 import { Box, Button, Drawer, Grid, Group,ComboboxData, Pagination, Paper,Select,Text,Textarea,TextInput, Title, NumberInput } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import {FaEye, FaFileExcel, FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
+import {FaFileExcel, FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
 import { useForm } from "@mantine/form";
@@ -12,11 +12,9 @@ import type {TableDataType, FormType } from '../../types/Projects';
 import { excelDownload , directionAccessor} from '../../utils/helper';
 import { DatePickerInput } from '@mantine/dates';
 import { SortingType } from '../../types/Generic';
-import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from "../../redux/hook";
 
 export default function List() {
-  const navigate = useNavigate();
   const userInfo = useAppSelector(state => state.user);
   const [tableHeight, setTableHeight] = useState<number>(400);
   const topRef = useRef<HTMLDivElement | null>(null);
@@ -249,16 +247,11 @@ export default function List() {
       width: 150,
       headerClassName:"text-center",
       disableSortBy:true,
+      visible:[1000,100].includes(userInfo.m_user_type_id) ? true : false,
       Cell:({row})=>{
           return <Group gap='xs' justify='center'>
-            <Button variant='light' color='green' onClick={()=> navigate('/projects/view', {state:{project_id:row.original.project_id}})}><FaEye/></Button>
-            {
-              [1000,100].includes(userInfo.m_user_type_id) && <>
                 <Button variant='light' onClick={()=>handleEdit(row.original.project_id)}><FaPencil/></Button>
                 <Button variant='light' color="red" onClick={()=>handleDelete(row.original.project_id)}><FaTrash/></Button>
-              </>
-            }
-
           </Group>;
       }
     },

@@ -33,7 +33,6 @@ const AttendanceReport = lazy(()=> import('./pages/attendance/Report'));
 
 const Clients = lazy(()=> import('./pages/projects/Clients'));
 const ProjectsList = lazy(()=> import('./pages/projects/List'));
-const ProjectView = lazy(()=> import('./pages/projects/View'));
 const Team = lazy(()=> import('./pages/projects/Team'));
 const Tasks = lazy(()=> import('./pages/projects/Tasks'));
 const TimeSheets = lazy(()=> import('./pages/projects/TimeSheets'));
@@ -74,7 +73,6 @@ export default function Router(){
 
                 <Route path='/projects/clients' element={<RequiredAuth m_user_type_id={[1000, 100]}><ClientsContext><Clients /></ClientsContext></RequiredAuth>} />
                 <Route path='/projects/list' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><ProjectsContext><ProjectsList /></ProjectsContext></RequiredAuth>} />
-                <Route path='/projects/view' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><ProjectView /></RequiredAuth>} />
                 <Route path='/projects/team' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><TeamContext><Team/></TeamContext></RequiredAuth>} />
                 <Route path='/projects/tasks' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><TasksContext><Tasks/></TasksContext></RequiredAuth>} />
                 <Route path='/projects/timesheets' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><TimeContext><TimeSheets/></TimeContext></RequiredAuth>} />

@@ -23,28 +23,4 @@ export type TableDataType = Omit<FormType, 'start_date' | 'end_date'> & {
     client_name:string;
 }
 
-export type TeamMemberFormType = {
-    project_member_id:number,
-    user_login_id:string | null,
-    role:string,
-    start_date:Date | null,
-    end_date:Date | null,
-}
 
-export type TeamFormStateType = {
-    isUpdated:boolean;
-    editData:TeamMemberFormType | null
-}
-
-type TeamMemberType = Omit<TeamMemberFormType, 'start_date' | 'end_date'> & {
-    start_date:string; 
-    end_date:string;
-    email_id:string;
-    phone_number:string;
-    user_name:string;
-}
-
-export interface ProjectDetailsType{
-    basic:Omit<TableDataType, 's_no'>,
-    teamMembers:TeamMemberType[]
-}
