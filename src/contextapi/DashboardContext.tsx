@@ -10,7 +10,8 @@ const initialValues:stateType = {
     upcomingHolidays:null,
     todayBirthday:null,
     newHires:null,
-    workAnniversary:null
+    workAnniversary:null,
+    attendanceChart:null
 }
 
 export default function DashboardContext({children}:PropsWithChildren){

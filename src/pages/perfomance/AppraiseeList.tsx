@@ -1,14 +1,14 @@
 import { useDisclosure } from '@mantine/hooks';
 import { Box, Button, ComboboxData, Drawer, Grid, Group, Pagination, Paper,Select,Text,Title } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { FaFileExcel, FaEye, FaPlus, FaXmark, FaFloppyDisk, FaAngleLeft, FaTrash} from "react-icons/fa6";
+import { FaEye, FaPlus, FaXmark, FaFloppyDisk, FaAngleLeft, FaTrash} from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
 import { useForm } from "@mantine/form";
 import { protectedApi } from '../../utils/ApiService';
 import { alert } from '../../utils/Alert';
 import { UseAppraisee } from '../../contextapi/GenericContext';
-import { excelDownload , directionAccessor} from '../../utils/helper';
+import { directionAccessor} from '../../utils/helper';
 import type { SortingType } from '../../types/Generic';
 import type {FormType, TableDataType } from '../../types/AppraiseeList';
 import { useNavigate , useLocation} from "react-router-dom";
@@ -204,7 +204,6 @@ export default function AppraiseeList() {
                 <Title order={6} tt='uppercase'>Appraisee List</Title>
                 <Group align="center" gap='xs'>
                     <Button leftSection={<FaPlus/>} onClick={open}>Add</Button>
-                    <Button leftSection={<FaFileExcel/>} color='green' onClick={()=>excelDownload("leaveType")}>Excel</Button>
                     <Button leftSection={<FaAngleLeft/>} onClick={()=>navigate(-1)} color='dark.6'>Back</Button>
                 </Group>
                 </Group>
@@ -223,7 +222,7 @@ export default function AppraiseeList() {
             </Paper>
             <Drawer opened={opened} onClose={()=>{form.reset(); close(); dispatch({type:"isUpdated", payload:{is_updated:false, editData:null}});}} title={state.is_updated ? "Update Appraisee"  : "Add Appraisee"} closeOnClickOutside={false} position="right" offset={8} radius="sm">
                   {
-                    employees != null ? employees.length == 0 ? <Text>All Employee Include in this Appraisal Cycle</Text>
+                    employees != null ? employees.length == 0 ? <Text>Not to be include the employee in this Appraisal Cycle</Text>
                     :    <Box component="form" onSubmit={form.onSubmit(values => handleSubmit(values))}>
                     <Grid gutter='sm' align='flex-end'>
                         <Grid.Col span={12}>

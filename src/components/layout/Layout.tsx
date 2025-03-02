@@ -14,7 +14,7 @@ function Layout() {
 
     <>
         {
-          isLoading &&  <Overlay center color='#fff' opacity={0.5} blur={0.2}><LoaderIcon size={30} /></Overlay>
+          isLoading &&  <Overlay center color='#fff' opacity={0.5} blur={0.2} zIndex={9999}><LoaderIcon size={30} /></Overlay>
         }
         <Box className={`panel ${isActive ? 'active' : ''}`}>
             <SideBar/>

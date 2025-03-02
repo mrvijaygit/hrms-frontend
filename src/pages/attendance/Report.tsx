@@ -1,12 +1,12 @@
-import { Box, Button, Grid, Group, Pagination, Paper,Select,Text, Title } from "@mantine/core";
+import { Box, Grid, Group, Pagination, Paper,Select,Text, Title } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import {FaFileExcel, FaCheck, FaXmark, FaRegCalendarCheck} from "react-icons/fa6";
+import {FaCheck, FaXmark, FaRegCalendarCheck} from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
 import { MonthPickerInput } from '@mantine/dates';
 import { protectedApi } from '../../utils/ApiService';
 import { UseAReport } from '../../contextapi/GenericContext';
-import { excelDownload , directionAccessor} from '../../utils/helper';
+import {directionAccessor} from '../../utils/helper';
 import type { SortingType } from '../../types/Generic';
 import type { TableDataType, HeaderType } from '../../types/AttendanceRecord';
 import { FaExclamationCircle } from "react-icons/fa";
@@ -120,10 +120,7 @@ export default function Report() {
     <>
       <Paper p='xs' mb='xs' shadow='xs' ref={topRef}>
         <Group align="center" justify="space-between" gap='xs'>
-          <Title order={6} tt='uppercase'>Attendance Report</Title>
-          <Group align="center" gap='xs'>
-            <Button leftSection={<FaFileExcel/>} color='green' onClick={()=>excelDownload("holiday", state?.filter)}>Excel</Button>
-          </Group>
+          <Title order={6} tt='uppercase'>Monthly Report</Title>
         </Group>
       </Paper>
       <Paper p='xs' shadow='xs' mb='xs' ref={filterRef}>

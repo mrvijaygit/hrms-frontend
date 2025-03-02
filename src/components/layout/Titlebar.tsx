@@ -2,7 +2,6 @@ import { Flex, Title, UnstyledButton, Menu, Group, Text, Box, Avatar , useMantin
 import { FaBars } from "react-icons/fa6";
 import { useState } from "react";
 import cx from 'clsx';
-import { GoGear } from "react-icons/go";
 import { IoLogOutOutline } from "react-icons/io5";
 import { LiaExchangeAltSolid } from "react-icons/lia";
 
@@ -49,10 +48,6 @@ function Titlebar() {
               </UnstyledButton>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>Settings</Menu.Label>
-              <Menu.Item leftSection={<GoGear/>} onClick={()=>{navigate("/profile")}}>
-                Account settings
-              </Menu.Item>
               <Menu.Item leftSection={<LiaExchangeAltSolid/>}>
                 Change Password
               </Menu.Item>

@@ -89,10 +89,10 @@ export interface DocumentType{
 
 export interface ProfileType {
     basic:Omit<BasicType, "date_of_birth" | "date_of_joining"> & {date_of_birth:string; date_of_joining:string};
-    bank: BankType;
-    education: EducationType;
-    experience: ExperienceType[];
-    salary:SalaryType;
+    bank: BankType | null;
+    education: EducationType | null;
+    experience: ExperienceType[] | null;
+    salary:SalaryType | null;
 }
 
 export interface EditFormType {

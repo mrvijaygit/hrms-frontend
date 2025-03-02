@@ -149,9 +149,20 @@ table tr th{ white-space: nowrap; text-transform: capitalize; font-weight: norma
 .object-pos-center{
   object-position: center;
 }
+.object-pos-left-bottom{
+  object-position: left bottom;
+}
 .table-responsive{
   overflow: auto;
 }
+.login-bg{
+  background-image: url("../images/login.jpeg");
+  background-position: left bottom;
+  background-color: #d4f1f9;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
 @media screen and (min-width:992px){
   .sticky-col{
     position: sticky;

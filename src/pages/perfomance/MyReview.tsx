@@ -106,7 +106,7 @@ export default function MyReview() {
           : <Flex justify='center' align="center"><Text>You are not included in this appraisal cycle</Text></Flex> 
         }
         {
-          state?.filter?.status_id == 1 && questions != null && 
+          state?.filter?.status_id == 1 && state?.data?.is_active == 1 && questions != null && 
           <>
             {
               state?.data?.user_login_id == user_login_id ? <Questions questions={questions}/> : 
@@ -114,6 +114,10 @@ export default function MyReview() {
             }
           </>
          
+        }
+        {
+          state?.filter?.status_id == 1 && state?.data?.is_active == 0 && 
+          <Group align="center" justify="center" h={300}><Title order={5} c='dimmed'>{state.data.appraisal_name} is not to start.</Title></Group>
         }
         {
           state?.filter?.status_id != null && state.filter.status_id >= 2 && questions != null &&  <QuestionsAndAnswer questions={questions}/>

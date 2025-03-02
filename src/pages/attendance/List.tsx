@@ -172,13 +172,13 @@ function List() {
       accessor:'user_name',
       width:"auto",
       headerClassName:"text-capitalize",
-      sortDirection: sort.accessor === 'user_name' ? sort.direction : 'none'
+      sortDirection: sort.accessor === 'user_name' ? sort.direction : 'none',
+      visible:userInfo.m_user_type_id == 1 ? false : true
     },
     {
       Header:'Date',
       accessor:'attendance_date',
       width:150,
-      headerClassName:"text-center",
       sortDirection: sort.accessor === 'attendance_date' ? sort.direction : 'none',
     },
     {

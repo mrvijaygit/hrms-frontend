@@ -1,14 +1,14 @@
 import { useDisclosure } from '@mantine/hooks';
 import { Box, Button, ComboboxData, Drawer, Grid, Group, Pagination, Paper,Select,Text,Textarea, Title } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import {FaFileExcel, FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
+import {FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
 import { useForm, zodResolver} from "@mantine/form";
 import { protectedApi } from '../../utils/ApiService';
 import { alert } from '../../utils/Alert';
 import { UseTime } from '../../contextapi/GenericContext';
-import { excelDownload , directionAccessor} from '../../utils/helper';
+import {directionAccessor} from '../../utils/helper';
 import type { SortingType } from '../../types/Generic';
 import type { FormType, TableDataType } from '../../types/TimeSheets';
 import { FaAngleDoubleLeft } from 'react-icons/fa';
@@ -16,10 +16,12 @@ import { useNavigate, useLocation} from 'react-router-dom';
 import { TimeSheetSchema } from '../../utils/Validation';
 import { DateTimePicker } from '@mantine/dates';
 import CustomSelect from '../../components/CustomSelect';
+import { useAppSelector } from '../../redux/hook';
 
 export default function TimeSheets() {
   const location = useLocation();
   const navigate = useNavigate();
+  const m_user_type_id = useAppSelector((state) => state.user.m_user_type_id);
   const [tableHeight, setTableHeight] = useState<number>(400);
   const topRef = useRef<HTMLDivElement | null>(null);
   const filterRef = useRef<HTMLDivElement | null>(null);
@@ -30,8 +32,13 @@ export default function TimeSheets() {
   const {state, dispatch}  = UseTime();
   const [sort, setSort] = useState({} as SortingType);
 
+  // Filter
   const [tasks, setTasks] = useState<ComboboxData | null>(null);
   const [teamMembers, setTeamMembers] = useState<ComboboxData | null>(null);
+
+  // Form
+  const [tasksForm, setTasksForm] = useState<ComboboxData | null>(null);
+  const [teamMembersForm, setTeamMembersForm] = useState<ComboboxData | null>(null);
 
   const form = useForm<FormType>({
     initialValues:{
@@ -70,9 +77,18 @@ export default function TimeSheets() {
         let response1 = await protectedApi.get("/master/tasks", {params:{'project_id':location?.state?.project_id}});
         setTasks(response1.data);
 
+        if(response1.data.length > 0){
+          response1.data.shift();
+          setTasksForm(response1.data);
+        }
+
         let response2 = await protectedApi.get("/master/teamMembers", {params:{'project_id':location?.state?.project_id}});
         setTeamMembers(response2.data);
 
+        if(response2.data.length > 0){
+          response2.data.shift();
+          setTeamMembersForm(response2.data);
+        }
 
         dispatch({type:"filter", payload:{'key':"task_id",'value':location?.state?.task_id ? location?.state?.task_id : -1}});
         dispatch({type:"filter", payload:{'key':"project_member_id",'value':location?.state?.project_member_id ? location?.state?.project_member_id : -1}});
@@ -217,6 +233,7 @@ export default function TimeSheets() {
       width: 100,
       headerClassName:"text-center",
       disableSortBy:true,
+      visible:[20,1].includes(m_user_type_id) ? true : false,
       Cell:({row})=>{
           return <Group gap='xs' justify='center'>
             <Button variant='light' onClick={()=>handleEdit(row.original.timesheet_id)}><FaPencil/></Button>
@@ -238,8 +255,9 @@ export default function TimeSheets() {
         <Group align="center" justify="space-between" gap='xs'>
           <Title order={6} tt='uppercase'>Timesheets</Title>
           <Group align="center" gap='xs'>
-            <Button leftSection={<FaPlus/>} onClick={open}>Add TimeSheet</Button>
-            <Button leftSection={<FaFileExcel/>} color='green' onClick={()=>excelDownload("timesheets")}>Excel</Button>
+            {
+              [20,1].includes(m_user_type_id) &&  <Button leftSection={<FaPlus/>} onClick={open}>Add TimeSheet</Button>
+            }
             <Button leftSection={<FaAngleDoubleLeft/>} color='dark.6' onClick={()=>navigate(-1)}>Back</Button>
           </Group>
         </Group>
@@ -251,11 +269,14 @@ export default function TimeSheets() {
             value={state.filter?.task_id} 
             onChange={(value) => dispatch({type:"filter", payload:{'key':"task_id",'value':value}})}/>
           </Grid.Col>
-          <Grid.Col span={{lg:3, md:6}}>
+          {
+            m_user_type_id != 1 &&   <Grid.Col span={{lg:3, md:6}}>
             <CustomSelect size='xs' label='Team Member' data={teamMembers != null ? teamMembers :[]} 
             value={state.filter?.project_member_id} 
             onChange={(value) => dispatch({type:"filter", payload:{'key':"project_member_id",'value':value}})}/>
           </Grid.Col>
+          }
+        
         </Grid>
       </Paper>
       <Paper p='xs' shadow="xs" my='xs'>
@@ -274,10 +295,10 @@ export default function TimeSheets() {
         <Box component="form" onSubmit={form.onSubmit(values => handleSubmit(values))}>
           <Grid gutter='sm' align='flex-end'>
               <Grid.Col span={12}>
-                <CustomSelect label="Task" data={tasks != null ? tasks :[]} {...form.getInputProps("task_id")}/>
+                <CustomSelect label="Task" data={tasksForm != null ? tasksForm :[]} {...form.getInputProps("task_id")}/>
               </Grid.Col>
               <Grid.Col span={12}>
-                <CustomSelect label="Team Member" data={teamMembers != null ? teamMembers :[]}  {...form.getInputProps("project_member_id")}/>
+                <CustomSelect label="Team Member" data={teamMembersForm != null ? teamMembersForm :[]}  {...form.getInputProps("project_member_id")}/>
               </Grid.Col>
               <Grid.Col span={6}>
                 <DateTimePicker label="Start Date & Time" maxDate={new Date()} valueFormat='DD-MMM-YYYY hh:mm a' {...form.getInputProps("start_date_time")}/>

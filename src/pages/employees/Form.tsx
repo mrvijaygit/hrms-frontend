@@ -50,10 +50,10 @@ function Form() {
         dispatch({type:'setPrimaryKey',payload:{...state,
           user_login_id:location.state.user_login_id,
           isEdit:true, 
-          employee_id:resolve.data.basic.employee_id,
-          employee_bank_id:resolve.data.bank.employee_bank_id,
-          employee_education_id:resolve.data.education.employee_education_id,
-          employee_salary_id:resolve.data.salary.employee_salary_id
+          employee_id:resolve.data.basic == null ? -1 : resolve.data.basic.employee_id,
+          employee_bank_id:resolve.data.bank == null ? -1 : resolve.data.bank.employee_bank_id,
+          employee_education_id:resolve.data.education == null ? -1 :resolve.data.education.employee_education_id,
+          employee_salary_id:resolve.data.salary == null ? -1 : resolve.data.salary.employee_salary_id
         }});
         dispatch({type:'setEditFormData', payload:{'key':'basic', 'value':resolve.data['basic']}});
         dispatch({type:'setEditFormData', payload:{'key':'bank', 'value':resolve.data['bank']}});
@@ -63,6 +63,7 @@ function Form() {
         dispatch({type:'setEditFormData', payload:{'key':'documents', 'value':resolve.data['documents']}});
       }
       catch(err){
+        console.log(err);
         alert.error('Master Not Found');
       }
   })();

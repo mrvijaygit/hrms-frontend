@@ -1,7 +1,8 @@
-import { dataType as noticeType } from "./Notice"
+import { TableDataType as noticeType } from "./Notice"
 import { FormType as holidayFormType } from "./Holiday";
 import { formType as attendanceFormType } from "./Attendance";
 import { Dispatch } from "react";
+import type { DonutChartCell } from "@mantine/charts";
 
 interface holidayTypeModify extends Omit<holidayFormType, "holiday_date">{
     holiday_date: string;
@@ -38,13 +39,14 @@ export type cardType = {
 }
 
 export type stateType ={
-    attendance:attendanceType | null
-    adminCard:cardType[] | null
-    notice: noticeType[] | null,
-    upcomingHolidays: holidayTypeModify[] | null,
-    todayBirthday: todayBirthday[] | null,
-    newHires:  newHires[] | null,
-    workAnniversary:  workAnniversary[] | null,
+    attendance:attendanceType | null;
+    attendanceChart:DonutChartCell[] | null;
+    adminCard:cardType[] | null;
+    notice: noticeType[] | null;
+    upcomingHolidays: holidayTypeModify[] | null;
+    todayBirthday: todayBirthday[] | null;
+    newHires:  newHires[] | null;
+    workAnniversary:  workAnniversary[] | null;
 }
 
 export type actionType = {type:"setAll", payload:stateType['attendance'] | Omit<stateType, 'attendance'>}

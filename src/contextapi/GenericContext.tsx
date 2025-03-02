@@ -10,8 +10,8 @@ import type {TableDataType as AReportTableDataType, FilterType as AReportFilterT
 import type {TableDataType as ACycleTableDataType, FormType as ACycleFormType} from "../types/AppraisalCycle";
 import type {TableDataType as AppraiseeTableDataType, FormType as AppraiseeFormType} from "../types/AppraiseeList";
 import type {TableDataType as CompetencyTableDataType, FormType as CompetencyFormType} from "../types/Competency";
-import type {TableDataType as GoalTableDataType, FormType as GoalFormType} from "../types/Goal";
 import type {TableDataType as TimeTableDataType, FormType as TimeFormType, FilterType as TimeFilterType} from "../types/TimeSheets";
+import type {TableDataType as NoticeTableDataType, FormType as NoticeFormType} from "../types/Notice";
 
 import GenericReducer from "../reducers/GenericReducer";
 
@@ -25,8 +25,8 @@ const AReport = createContext({} as ContextType<AReportTableDataType, {}, ARepor
 const ACycle = createContext({} as ContextType<ACycleTableDataType, ACycleFormType>);
 const Appraisee = createContext({} as ContextType<AppraiseeTableDataType, AppraiseeFormType>);
 const Competency = createContext({} as ContextType<CompetencyTableDataType, CompetencyFormType>);
-const Goal = createContext({} as ContextType<GoalTableDataType, GoalFormType>);
 const Time = createContext({} as ContextType<TimeTableDataType, TimeFormType, TimeFilterType>);
+const Notice = createContext({} as ContextType<NoticeTableDataType, NoticeFormType>);
 
 const HolidayInitialValues:TState<HolidayTableDataType, HolidayFormType, HolidayFilterType> = {
     page:1,
@@ -140,16 +140,6 @@ const CompetencyInitialValues:TState<CompetencyTableDataType, CompetencyFormType
     editData:null
 }
 
-const GoalInitialValues:TState<GoalTableDataType, GoalFormType> = {
-    page:1,
-    show:"10",
-    data:[],
-    info:"",
-    totalPage:1,
-    is_updated:false,
-    editData:null
-}
-
 const TimeInitialValues:TState<TimeTableDataType, TimeFormType, TimeFilterType> = {
     page:1,
     show:"10",
@@ -163,6 +153,16 @@ const TimeInitialValues:TState<TimeTableDataType, TimeFormType, TimeFilterType> 
         task_id:null,
         project_member_id:null
     }
+}
+
+const NoticeInitialValues:TState<NoticeTableDataType, NoticeFormType> = {
+    page:1,
+    show:"10",
+    data:[],
+    info:"",
+    totalPage:1,
+    is_updated:false,
+    editData:null
 }
 
 export function HolidayContext({children}:PropsWithChildren){
@@ -215,14 +215,14 @@ export function CompetencyContext({children}:PropsWithChildren){
     return <Competency.Provider value={{state, dispatch}}>{children}</Competency.Provider>
 }
 
-export function GoalContext({children}:PropsWithChildren){
-    const [state, dispatch] = useReducer(GenericReducer<GoalTableDataType, GoalFormType>, GoalInitialValues);
-    return <Goal.Provider value={{state, dispatch}}>{children}</Goal.Provider>
-}
-
 export function TimeContext({children}:PropsWithChildren){
     const [state, dispatch] = useReducer(GenericReducer<TimeTableDataType, TimeFormType, TimeFilterType>, TimeInitialValues);
     return <Time.Provider value={{state, dispatch}}>{children}</Time.Provider>
+}
+
+export function NoticeContext({children}:PropsWithChildren){
+    const [state, dispatch] = useReducer(GenericReducer<NoticeTableDataType, NoticeFormType>, NoticeInitialValues);
+    return <Notice.Provider value={{state, dispatch}}>{children}</Notice.Provider>
 }
 
 export const UseHoliday = () => useContext(Holiday);
@@ -235,5 +235,5 @@ export const UseAReport = () => useContext(AReport);
 export const UseACycle = () => useContext(ACycle);
 export const UseAppraisee = () => useContext(Appraisee);
 export const UseCompetency = () => useContext(Competency);
-export const UseGoal = () => useContext(Goal);
 export const UseTime = () => useContext(Time);
+export const UseNotice = () => useContext(Notice);

@@ -1,12 +1,13 @@
-import {Box, Button, Flex, Image, PasswordInput, ScrollArea, Text, TextInput } from '@mantine/core';
+import {Box, Button, Flex, Image, Paper, PasswordInput, ScrollArea, TextInput, Title } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useForm} from '@mantine/form';
 import { authApi, protectedApi } from '../../utils/ApiService';
 import { alert } from '../../utils/Alert';
 import { useDispatch } from 'react-redux';
 import {login} from "../../redux/userSlice"
-import loginImg from "../../assets/images/login.gif";
 import logo  from "../../assets/images/login_logo.jpeg";
+import { FaUser, FaKey } from 'react-icons/fa6';
+
 type LoginFormType = {
   email_id : string;
   pass_word : string;
@@ -59,21 +60,18 @@ function Login() {
   return (
     <>
     <ScrollArea h={window.innerHeight}>
-      <Flex wrap='wrap' h={window.innerHeight} p={{lg:'xl', md:'md', base:'xs'}}>
-        <Flex w={{lg:'50%'}} bg='#f4f6fa' p={{lg:'lg', md:'md', base:'xs'}} justify='center' align='center'>
-            <Image src={loginImg} height={380} fit="contain"/>
-        </Flex>
-        <Flex flex={{lg:'50%'}} px='sm' direction='column' justify='center' align='center'>
-          <Box w={{md:'60%', base:'100%'}}>
-            <Image  height="80px" mb="xs" fit="contain" src={logo} className="object-pos-start" />
-            <Text c='dimmed' ta='center' my='xs'>Enter your credentials to access your account</Text>
-            <Box component='form' mt='lg' onSubmit={form.onSubmit((values)=>handleSubmit(values))}>
-              <TextInput label="Email Address" key={form.key('email_id')} {...form.getInputProps('email_id')} />
-              <PasswordInput label="Password" key={form.key('pass_word')} {...form.getInputProps('pass_word')} mt="md" />
-              <Button type='submit' fullWidth mt="xl">Sign In</Button>
+      <Flex wrap='wrap' h={window.innerHeight} w="100%" className='login-bg' justify='center' align='center' p="sm">
+          <Paper shadow='md' w={{lg:"400px", base:'100%'}} bg='gold.7' p='md' radius="lg">
+            <Paper w='140px' h='100px' bg='white' radius='md' style={{overflow:"hidden"}} p='xs' m='auto'>
+              <Image width="100%" height="100%" fit="contain" src={logo} className="object-pos-start" />
+            </Paper>
+            <Title order={5}  ta='center' my='lg' tt='uppercase'>Login to Continue</Title>
+            <Box component='form' onSubmit={form.onSubmit((values)=>handleSubmit(values))}>
+              <TextInput radius='lg' leftSection={<FaUser size={12}/>} placeholder="Email Address" key={form.key('email_id')} {...form.getInputProps('email_id')} />
+              <PasswordInput radius='lg' leftSection={<FaKey size={12}/>} style={{borderRadius:"32px"}} placeholder="Password" key={form.key('pass_word')} {...form.getInputProps('pass_word')} mt="md" />
+              <Button color='dark.6' type='submit' style={{borderRadius:"32px"}} fullWidth mt="xl">Login</Button>
             </Box>
-          </Box>
-        </Flex>
+          </Paper>
       </Flex>
     </ScrollArea>
 

@@ -1,25 +1,27 @@
 import { useDisclosure } from '@mantine/hooks';
 import { Box, Button, ComboboxData, Drawer, Grid, Group, NumberInput, Pagination, Paper,Select,Text,Textarea,TextInput, Title, Tooltip } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import {FaClock, FaFileExcel, FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
+import {FaClock, FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
 import { useForm, zodResolver } from "@mantine/form";
 import { protectedApi } from '../../utils/ApiService';
 import { alert } from '../../utils/Alert';
 import { UseTasks } from '../../contextapi/GenericContext';
-import { excelDownload , directionAccessor} from '../../utils/helper';
+import { directionAccessor} from '../../utils/helper';
 import type { SortingType } from '../../types/Generic';
 import type { FormType, TableDataType } from '../../types/Tasks';
 import { DatePickerInput } from '@mantine/dates';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CustomSelect from '../../components/CustomSelect';
 import { TaskSchema } from '../../utils/Validation';
+import { useAppSelector } from '../../redux/hook';
 
 
 export default function Tasks() {
   const location = useLocation();
   const navigate = useNavigate();
+  const m_user_type_id = useAppSelector((state) => state.user.m_user_type_id);
 
   const [tableHeight, setTableHeight] = useState<number>(400);
   const topRef = useRef<HTMLDivElement | null>(null);
@@ -239,8 +241,11 @@ export default function Tasks() {
       Cell:({row})=>{
           return <Group gap='xs' justify='center'>
             <Tooltip label="Timesheet" withArrow position="bottom"><Button variant='light' color='green' onClick={()=>handleView(row.original.task_id)}><FaClock/></Button></Tooltip>
-            <Button variant='light' onClick={()=>handleEdit(row.original.task_id)}><FaPencil/></Button>
-            <Button variant='light' color="red" onClick={()=>handleDelete(row.original.task_id)}><FaTrash/></Button>
+            {
+              m_user_type_id == 20 && <><Button variant='light' onClick={()=>handleEdit(row.original.task_id)}><FaPencil/></Button>
+            <Button variant='light' color="red" onClick={()=>handleDelete(row.original.task_id)}><FaTrash/></Button></>
+            }
+            
           </Group>;
       }
     },
@@ -257,10 +262,12 @@ export default function Tasks() {
       <Paper p='xs' mb='xs' shadow='xs' ref={topRef}>
         <Group align="center" justify="space-between" gap='xs'>
           <Title order={6} tt='uppercase'>Task List</Title>
-          <Group align="center" gap='xs'>
+          {
+            m_user_type_id == 20 && state?.filter?.project_id != null &&  <Group align="center" gap='xs'>
             <Button leftSection={<FaPlus/>} onClick={open}>Add Task</Button>
-            <Button leftSection={<FaFileExcel/>} color='green' onClick={()=>excelDownload("clients")}>Excel</Button>
           </Group>
+          }
+         
         </Group>
       </Paper>
       <Paper p='xs' shadow='xs' mb='xs' ref={filterRef}>

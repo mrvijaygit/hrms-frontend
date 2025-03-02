@@ -32,7 +32,7 @@ function SideBar() {
       initiallyOpened: locationUrl.includes('/attendance/'),
       group: [
         { label: 'Attendance List', link: '/attendance/list', id:4, access:[1000,100,20,1]},
-        { label: 'Report', link: '/attendance/report', id:18, access:[1000,100]},
+        { label: 'Monthly Report', link: '/attendance/report', id:18, access:[1000,100]},
       ],
       group_access:[1000,100,20,1]
     },

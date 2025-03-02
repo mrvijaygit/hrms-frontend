@@ -1,7 +1,7 @@
 import { useDisclosure } from '@mantine/hooks';
 import { Box, Button, Drawer, Grid, Group, Pagination, Paper,Select,Switch,Text,TextInput, Title } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import {FaEye, FaFileExcel, FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
+import {FaEye,FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
 import { useForm } from "@mantine/form";
@@ -9,7 +9,7 @@ import { DatePickerInput } from '@mantine/dates';
 import { protectedApi } from '../../utils/ApiService';
 import { alert } from '../../utils/Alert';
 import { UseACycle } from '../../contextapi/GenericContext';
-import { excelDownload , directionAccessor} from '../../utils/helper';
+import {directionAccessor} from '../../utils/helper';
 import type { SortingType } from '../../types/Generic';
 import type { FormType, TableDataType } from '../../types/AppraisalCycle';
 import CustomSelect from '../../components/CustomSelect';
@@ -232,7 +232,6 @@ export default function AppraisalCycle() {
           {
             m_user_type_id == 1000 &&  <Group align="center" gap='xs'>
               <Button leftSection={<FaPlus/>} onClick={open}>Add</Button>
-              <Button leftSection={<FaFileExcel/>} color='green' onClick={()=>excelDownload("appraisalcycle")}>Excel</Button>
             </Group>
           }
 

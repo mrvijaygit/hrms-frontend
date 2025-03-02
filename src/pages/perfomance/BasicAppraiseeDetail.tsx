@@ -1,7 +1,9 @@
 import {Divider, Grid,Rating,Text, useMantineTheme } from "@mantine/core"
 import { UseMyReview } from "../../contextapi/MyReviewContext";
+import { useAppSelector } from "../../redux/hook";
 
 function BasicAppraiseeDetail() {
+    const user_login_id = useAppSelector(state => state.user.user_login_id);
     const theme = useMantineTheme();
 
     const {state} = UseMyReview();
@@ -16,9 +18,12 @@ function BasicAppraiseeDetail() {
             <Grid.Col span={{md:3, sm:6}}>
                 <Text fz="xs" c='dark.3' tt="uppercase">Self Rating</Text> <Rating value={state?.data?.self_score} fractions={2} readOnly />
             </Grid.Col>
-            <Grid.Col span={{md:3, sm:6}}>
-                <Text fz="xs" c='dark.3' tt="uppercase">Final Rating</Text> <Rating  value={state?.data?.is_publish == 1 ? state?.data?.overall_score : 0} fractions={2} readOnly />
+            {
+                (state?.data?.is_publish == 1 || user_login_id != state.data?.user_login_id)  &&  <Grid.Col span={{md:3, sm:6}}>
+                <Text fz="xs" c='dark.3' tt="uppercase">Final Rating</Text> <Rating  value={state?.data?.overall_score} fractions={2} readOnly />
             </Grid.Col>
+            }
+           
         </Grid>
 
         <Divider variant="dashed" my='xs'/>

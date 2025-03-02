@@ -14,7 +14,7 @@ const initialValues:stateType = {
     employee:[],
     filter:{
         user_login_id:null,
-        payroll_month:null
+        payroll_month:new Date()
     }
 }
 

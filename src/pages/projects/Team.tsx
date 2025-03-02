@@ -9,15 +9,15 @@ import { protectedApi } from '../../utils/ApiService';
 import { alert } from '../../utils/Alert';
 import { UseTeam } from '../../contextapi/GenericContext';
 import type { FormType, TableDataType } from '../../types/Team';
-import { useAppSelector } from '../../redux/hook';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CustomSelect from '../../components/CustomSelect';
+import { useAppSelector } from '../../redux/hook';
 type sortingType = { direction: string, accessor: string};
 
 export default function Tasks() {
   const location = useLocation();
   const navigate = useNavigate();
-  const logger_user_login_id = useAppSelector(state => state.user.user_login_id);
+  const m_user_type_id = useAppSelector((state) => state.user.m_user_type_id);
   const [employees , setEmployees] = useState<ComboboxData | null>(null);
   const [projects , setProjects] = useState<ComboboxData | null>(null);
   const [tableHeight, setTableHeight] = useState<number>(400);
@@ -71,10 +71,10 @@ export default function Tasks() {
         });
         setProjects(projectResponse.data.data);
         dispatch({type:"filter", payload:{'key':"project_id",'value':projectResponse.data.selected_id}});
-        let response = await protectedApi.get('/master/userList', {
-            params:{
-              reporting_id: logger_user_login_id
-            }
+        let response = await protectedApi.get('/master/userList',{
+          params:{
+            'm_user_type_id':1
+          }
         });
         setEmployees(response.data);
       }
@@ -206,6 +206,7 @@ export default function Tasks() {
       width: 100,
       headerClassName:"text-center",
       disableSortBy:true,
+      visible:m_user_type_id == 20 ? true :false,
       Cell:({row})=>{
           return <Group gap='xs' justify='center'>
             <Button variant='light' onClick={()=>handleEdit(row.original.project_member_id)}><FaPencil/></Button>
@@ -237,9 +238,11 @@ export default function Tasks() {
       <Paper p='xs' mb='xs' shadow='xs' ref={topRef}>
         <Group align="center" justify="space-between" gap='xs'>
           <Title order={6} tt='uppercase'>Team Members</Title>
-          <Group align="center" gap='xs'>
-            <Button leftSection={<FaPlus/>} onClick={open}>Add Member</Button>
-          </Group>
+            {
+                m_user_type_id == 20 &&   <Group align="center" gap='xs'>
+                <Button leftSection={<FaPlus/>} onClick={open}>Add Member</Button>
+              </Group>
+            }
         </Group>
       </Paper>
       <Paper p='xs' shadow='xs' mb='xs' ref={filterRef}>
@@ -263,7 +266,7 @@ export default function Tasks() {
           <Pagination total={state.totalPage} size='sm' value={state.page} onChange={(value) => dispatch({type:'setPage', payload:value})}/>
         </Group>
       </Paper>
-      <Drawer opened={opened} onClose={()=>{form.reset(); close(); dispatch({type:"isUpdated", payload:{is_updated:false, editData:null}});}} title={state.is_updated ? "Update Member"  : "Add Member"} closeOnClickOutside={false} position="right" offset={8} radius="sm">
+      <Drawer opened={opened} onClose={()=>{form.reset(); close(); dispatch({type:"isUpdated", payload:{is_updated:false, editData:null}});}} title={ state.is_updated ? "Update Member"  : "Add Member" } closeOnClickOutside={false} position="right" offset={8} radius="sm">
         <Box component="form" onSubmit={form.onSubmit(values => handleSubmit(values))}>
           <Grid gutter='sm' align='flex-end'>
               <Grid.Col span={12}>

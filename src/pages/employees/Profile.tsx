@@ -88,84 +88,95 @@ function Profile() {
               </Grid>
             </Paper>
           </Grid.Col>
-          <Grid.Col span={{lg:6}}>
-            <Paper p='sm' shadow="xs">
-              <Text c={theme.primaryColor} fw={500}>Bank Details</Text>
-              <Divider variant="dashed" my='xs'/>
-              <Grid>
-                <Grid.Col span={{lg:6,md:12}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">Bank Name</Text><Text fw={500}>{data?.bank.bank_name}</Text>
-                </Grid.Col>
-                <Grid.Col span={{lg:6,md:12}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">Branch Name</Text><Text fw={500}>{data?.bank.branch_name}</Text>
-                </Grid.Col>
-                <Grid.Col span={{md:6}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">Account Number</Text><Text fw={500}>{data?.bank.account_number}</Text>
-                </Grid.Col>
-                <Grid.Col span={{md:6}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">Account holder name</Text><Text fw={500}>{data?.bank.account_holder_name}</Text>
-                </Grid.Col>
-                <Grid.Col span={{md:6}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">Account Type</Text><Text fw={500}>{data?.bank.account_type_display}</Text>
-                </Grid.Col>
-                <Grid.Col span={{md:6}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">IFSC Code</Text><Text fw={500}>{data?.bank.ifsc_code}</Text>
-                </Grid.Col>
-              </Grid>
-            </Paper>
-          </Grid.Col>
-          <Grid.Col span={{lg:6}}>
-            <Paper p='sm' shadow="xs">
-              <Text c={theme.primaryColor} fw={500}>Education Details</Text>
-              <Divider variant="dashed" my='xs'/>
-              <Grid>
-                <Grid.Col span={{md:6}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">Field of Study</Text><Text fw={500}><Text component="span">{data?.education.degree_name}</Text> {data?.education.field_of_study}</Text>
-                </Grid.Col>
-                <Grid.Col span={{md:6}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">Graduation Year</Text><Text fw={500}>{data?.education.graduation_year}</Text>
-                </Grid.Col>
-                <Grid.Col span={{md:12}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">Institution Name</Text><Text fw={500}>{data?.education.institution_name}</Text>
-                </Grid.Col>
-                <Grid.Col span={{md:6}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">Institute Location</Text><Text fw={500}>{data?.education.institution_location}</Text>
-                </Grid.Col>
-                <Grid.Col span={{md:6}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">CGPA</Text><Text fw={500}>{data?.education.cgpa}</Text>
-                </Grid.Col>
-              </Grid>
-            </Paper>
-          </Grid.Col>
-          <Grid.Col span={12}>
-            <Paper p='sm' shadow="xs">
-              <Text c={theme.primaryColor} fw={500}>Salary Details</Text>
-              <Divider variant="dashed" my='xs'/>
-              <Grid>
-                <Grid.Col span={{lg:3,md:6}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">Basic Salary</Text><Text fw={500}>{data?.salary.basic_salary}</Text>
-                </Grid.Col>
-                <Grid.Col span={{lg:3,md:6}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">House Rent Allowance</Text><Text fw={500}>{data?.salary.house_rent_allowance}</Text>
-                </Grid.Col>
-                <Grid.Col span={{lg:3,md:6}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">Medical Allowance</Text><Text fw={500}>{data?.salary.medical_allowance}</Text>
-                </Grid.Col>
-                <Grid.Col span={{lg:3,md:6}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">Transport Allowance</Text><Text fw={500}>{data?.salary.transport_allowance}</Text>
-                </Grid.Col>
-                <Grid.Col span={{lg:3,md:6}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">Other Allowance</Text><Text fw={500}>{data?.salary.other_allowance}</Text>
-                </Grid.Col>
-                <Grid.Col span={{lg:3,md:6}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">Tax</Text><Text fw={500}>{data?.salary.tax}</Text>
-                </Grid.Col>
-                <Grid.Col span={{lg:3,md:6}}>
-                  <Text fz="xs" c='dark.3' tt="uppercase">Other Deduction</Text><Text fw={500}>{data?.salary.other_deduction}</Text>
-                </Grid.Col>
-              </Grid>
-            </Paper>
-          </Grid.Col>
+          {
+            data?.bank != null &&
+            <Grid.Col span={{lg:6}}>
+              <Paper p='sm' shadow="xs">
+                <Text c={theme.primaryColor} fw={500}>Bank Details</Text>
+                <Divider variant="dashed" my='xs'/>
+                <Grid>
+                  <Grid.Col span={{lg:6,md:12}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">Bank Name</Text><Text fw={500}>{data?.bank.bank_name}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{lg:6,md:12}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">Branch Name</Text><Text fw={500}>{data?.bank.branch_name}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{md:6}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">Account Number</Text><Text fw={500}>{data?.bank.account_number}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{md:6}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">Account holder name</Text><Text fw={500}>{data?.bank.account_holder_name}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{md:6}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">Account Type</Text><Text fw={500}>{data?.bank.account_type_display}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{md:6}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">IFSC Code</Text><Text fw={500}>{data?.bank.ifsc_code}</Text>
+                  </Grid.Col>
+                </Grid>
+              </Paper>
+            </Grid.Col>
+          }
+          {
+            data?.education != null && 
+            <Grid.Col span={{lg:6}}>
+              <Paper p='sm' shadow="xs">
+                <Text c={theme.primaryColor} fw={500}>Education Details</Text>
+                <Divider variant="dashed" my='xs'/>
+                <Grid>
+                  <Grid.Col span={{md:6}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">Field of Study</Text><Text fw={500}><Text component="span">{data?.education.degree_name}</Text> {data?.education.field_of_study}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{md:6}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">Graduation Year</Text><Text fw={500}>{data?.education.graduation_year}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{md:12}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">Institution Name</Text><Text fw={500}>{data?.education.institution_name}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{md:6}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">Institute Location</Text><Text fw={500}>{data?.education.institution_location}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{md:6}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">CGPA</Text><Text fw={500}>{data?.education.cgpa}</Text>
+                  </Grid.Col>
+                </Grid>
+              </Paper>
+            </Grid.Col>
+          }
+          {
+            data?.salary != null &&
+            <Grid.Col span={12}>
+              <Paper p='sm' shadow="xs">
+                <Text c={theme.primaryColor} fw={500}>Salary Details</Text>
+                <Divider variant="dashed" my='xs'/>
+                <Grid>
+                  <Grid.Col span={{lg:3,md:6}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">Basic Salary</Text><Text fw={500}>{data?.salary.basic_salary}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{lg:3,md:6}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">House Rent Allowance</Text><Text fw={500}>{data?.salary.house_rent_allowance}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{lg:3,md:6}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">Medical Allowance</Text><Text fw={500}>{data?.salary.medical_allowance}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{lg:3,md:6}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">Transport Allowance</Text><Text fw={500}>{data?.salary.transport_allowance}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{lg:3,md:6}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">Other Allowance</Text><Text fw={500}>{data?.salary.other_allowance}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{lg:3,md:6}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">Tax</Text><Text fw={500}>{data?.salary.tax}</Text>
+                  </Grid.Col>
+                  <Grid.Col span={{lg:3,md:6}}>
+                    <Text fz="xs" c='dark.3' tt="uppercase">Other Deduction</Text><Text fw={500}>{data?.salary.other_deduction}</Text>
+                  </Grid.Col>
+                </Grid>
+              </Paper>
+            </Grid.Col>
+          }
+         
+        
           {
                       data?.experience != null && <>
                   {

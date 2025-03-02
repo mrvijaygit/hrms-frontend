@@ -1,14 +1,14 @@
 import { useDisclosure } from '@mantine/hooks';
 import { Box, Button, Drawer, Grid, Group, NumberInput, Pagination, Paper,Select,Text,TextInput, Title } from "@mantine/core";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import {FaFileExcel, FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
+import {FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
 import { useForm } from "@mantine/form";
 import { protectedApi } from '../../utils/ApiService';
 import { alert } from '../../utils/Alert';
 import { UseCompetency } from '../../contextapi/GenericContext';
-import { excelDownload , directionAccessor} from '../../utils/helper';
+import {directionAccessor} from '../../utils/helper';
 import type { SortingType } from '../../types/Generic';
 import type { FormType, TableDataType } from '../../types/Competency';
 
@@ -155,6 +155,7 @@ export default function Competency() {
       Header:'Action',
       width: 100,
       headerClassName:"text-center",
+      disableSortBy:true,
       Cell:({row})=>{
           return <Group gap='xs' justify='center'>
             <Button variant='light' onClick={()=>handleEdit(row.original.compentency_id)}><FaPencil/></Button>
@@ -177,7 +178,6 @@ export default function Competency() {
           <Title order={6} tt='uppercase'>Compentency</Title>
           <Group align="center" gap='xs'>
             <Button leftSection={<FaPlus/>} onClick={open}>Add</Button>
-            <Button leftSection={<FaFileExcel/>} color='green' onClick={()=>excelDownload("compentency")}>Excel</Button>
           </Group>
         </Group>
       </Paper>

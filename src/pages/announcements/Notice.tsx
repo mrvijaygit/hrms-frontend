@@ -4,11 +4,12 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {FaFloppyDisk, FaPencil, FaPlus, FaTrash, FaXmark } from "react-icons/fa6";
 import { Column } from "react-table"
 import BasicTable from "../../components/Table/BasicTable";
-import { useForm } from "@mantine/form";
+import { useForm} from "@mantine/form";
 import { protectedApi } from '../../utils/ApiService';
 import { alert } from '../../utils/Alert';
-import { UseNotice } from '../../contextapi/NoticeContext';
-import type { dataType } from '../../types/Notice';
+import { UseNotice } from '../../contextapi/GenericContext';
+import type { FormType, TableDataType} from '../../types/Notice';
+import {directionAccessor} from '../../utils/helper';
 import { DatePickerInput } from '@mantine/dates';
 
 
@@ -23,13 +24,13 @@ export default function Notice() {
   const {state, dispatch}  = UseNotice();
   const [sort, setSort] = useState({} as sortingType);
 
-  const form = useForm<dataType>({
+  const form = useForm<FormType>({
     initialValues:{
       notice_id:-1,
       notice_title:'',
       notice_content:'',
       issue_date:null,
-      notice_status:null
+      notice_status:false
     },
     validate:{
       notice_title: (value) => (value.trim().length > 2 ? null : "Required"),
@@ -86,7 +87,8 @@ export default function Notice() {
             "notice_id":id
           }
         });
-        let obj = {...response.data[0],notice_status:String(response.data[0]['notice_status']),  issue_date:new Date(response.data[0]['issue_date_display'])};
+       
+        let obj = {...response.data[0],  issue_date:new Date(response.data[0]['issue_date_display'])};
         dispatch({type:"isUpdated", payload:{is_updated:true, editData:obj}});
         form.setValues(obj);
         open();
@@ -105,7 +107,8 @@ export default function Notice() {
     }
   } 
 
-  const handleSubmit = async(values:dataType) =>{
+  const handleSubmit = async(values:FormType) =>{
+
     try{
       let promise = await protectedApi.post("/announcement/saveNotice", JSON.stringify(values));
       alert.success(promise.data.msg);
@@ -134,7 +137,7 @@ export default function Notice() {
     }
   }
 
-  const columns:Column<dataType>[] = useMemo(() => [
+  const columns:Column<TableDataType>[] = useMemo(() => [
     {
       Header:'#',
       accessor:'s_no',
@@ -181,21 +184,10 @@ export default function Notice() {
     },
   ], [sort]);
 
-  const data:dataType[] = useMemo(()=>state.data, [state.data]);
+  const data:TableDataType[] = useMemo(()=>state.data, [state.data]);
 
   const columnHeaderClick = async (column:any) => {
- 
-    switch (column.sortDirection) {
-      case 'none':
-        setSort({ direction: 'ASC', accessor: column.id });
-        break;
-      case 'ASC':
-        setSort({ direction: 'DESC', accessor: column.id });
-        break;
-      case 'DESC':
-        setSort({ direction: 'none', accessor: column.id });
-        break;
-    }
+    setSort(directionAccessor(column));
   };
 
   return (
@@ -233,7 +225,7 @@ export default function Notice() {
                 <DatePickerInput label="Issue Date" {...form.getInputProps("issue_date")}/>
               </Grid.Col>
               <Grid.Col span={12}>
-                <Checkbox label="Is Active ?"  {...form.getInputProps("notice_status")} />
+                <Checkbox label="Is Active ?"  {...form.getInputProps("notice_status",  { type: 'checkbox' })}/>
               </Grid.Col>
               <Grid.Col span={12}>
                 <Group justify="flex-end" gap='sm'>
