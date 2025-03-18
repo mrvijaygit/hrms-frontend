@@ -1,4 +1,4 @@
-import {Box, Button, Flex, Image, Paper, PasswordInput, ScrollArea, TextInput, Title } from '@mantine/core';
+import {Box, Button, Container, Flex, Image, Paper, PasswordInput, ScrollArea, TextInput, Title } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useForm} from '@mantine/form';
 import { authApi, protectedApi } from '../../utils/ApiService';
@@ -60,19 +60,23 @@ function Login() {
   return (
     <>
     <ScrollArea h={window.innerHeight}>
-      <Flex wrap='wrap' h={window.innerHeight} w="100%" className='login-bg' justify='center' align='center' p="sm">
-          <Paper shadow='md' w={{lg:"400px", base:'100%'}} bg='gold.7' p='md' radius="lg">
-            <Paper w='140px' h='100px' bg='white' radius='md' style={{overflow:"hidden"}} p='xs' m='auto'>
-              <Image width="100%" height="100%" fit="contain" src={logo} className="object-pos-start" />
+      <Box className='login-bg'>
+      <Container size="xl">
+        <Flex wrap='wrap' h={window.innerHeight} w="100%"  justify="end" align='center' p="sm">
+            <Paper shadow='md' w={{lg:"500px", base:'100%'}} className='bg-gradient' p='md' radius="lg">
+              <Paper w='140px' h='100px' bg='white' radius='md' style={{overflow:"hidden"}} p='xs' m='auto'>
+                <Image width="100%" height="100%" fit="contain" src={logo} className="object-pos-start" />
+              </Paper>
+              <Title order={5}  ta='center' my='lg' tt='uppercase'>Login to Continue</Title>
+              <Box component='form' onSubmit={form.onSubmit((values)=>handleSubmit(values))}>
+                <TextInput size="lg"  radius='xl' leftSection={<FaUser size={14}/>} placeholder="Email Address" key={form.key('email_id')} {...form.getInputProps('email_id')} />
+                <PasswordInput size='lg' radius='xl' leftSection={<FaKey size={14}/>} style={{borderRadius:"32px"}} placeholder="Password" key={form.key('pass_word')} {...form.getInputProps('pass_word')} mt="md" />
+                <Box ta='end'><Button color='dark.6' size="lg" type='submit' style={{borderRadius:"32px"}} mt="lg">Login</Button></Box>
+              </Box>
             </Paper>
-            <Title order={5}  ta='center' my='lg' tt='uppercase'>Login to Continue</Title>
-            <Box component='form' onSubmit={form.onSubmit((values)=>handleSubmit(values))}>
-              <TextInput radius='lg' leftSection={<FaUser size={12}/>} placeholder="Email Address" key={form.key('email_id')} {...form.getInputProps('email_id')} />
-              <PasswordInput radius='lg' leftSection={<FaKey size={12}/>} style={{borderRadius:"32px"}} placeholder="Password" key={form.key('pass_word')} {...form.getInputProps('pass_word')} mt="md" />
-              <Button color='dark.6' type='submit' style={{borderRadius:"32px"}} fullWidth mt="xl">Login</Button>
-            </Box>
-          </Paper>
-      </Flex>
+        </Flex>
+      </Container>
+      </Box>
     </ScrollArea>
 
     </>

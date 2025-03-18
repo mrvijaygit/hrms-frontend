@@ -8,6 +8,8 @@ export type formType = {
   punch_in:string,
   punch_out:string | null,
   m_attendance_status_id:string | null,
+  att_latitude?:number | null;
+  att_longitude?:number | null;
 }
 
 export type tableDataType = {

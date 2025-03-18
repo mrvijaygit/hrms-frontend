@@ -156,13 +156,15 @@ table tr th{ white-space: nowrap; text-transform: capitalize; font-weight: norma
   overflow: auto;
 }
 .login-bg{
-  background-image: url("../images/login.jpeg");
+  background-image: url("../images/login.png");
   background-position: left bottom;
   background-color: #d4f1f9;
   background-repeat: no-repeat;
   background-size: contain;
 }
-
+.bg-gradient{
+  background: linear-gradient(299deg, #ffa53a, #f5cf72);
+}
 @media screen and (min-width:992px){
   .sticky-col{
     position: sticky;

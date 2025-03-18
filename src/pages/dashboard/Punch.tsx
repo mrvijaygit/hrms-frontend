@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { protectedApi } from "../../utils/ApiService";
 import { alert } from "../../utils/Alert";
+import type { formType } from "../../types/Attendance";
 
 export default function Punch() {
     const { state, dispatch } = UseDashboard();
@@ -24,14 +25,38 @@ export default function Punch() {
         })();
     },[triggerApi]);
 
+    function getLongAndLat() {
+        return new Promise((resolve, reject) =>{
+            window.navigator.geolocation.getCurrentPosition((pos)=>{
+                return resolve(pos);
+              },(err)=>{
+                return reject(err);
+             })
+        });
+    }
+
     const checkinout = async() =>{
         try{
-            let _obj ={
+            let _obj:Omit<formType, 'm_attendance_status_id'> = {
                 attendance_id:state.attendance?.attendance_id || -1,
-                user_login_id:user_login_id,
+                user_login_id:String(user_login_id),
                 punch_in:state.attendance != null ? state.attendance.punch_in : dayjs().format("HH:mm"),
-                punch_out:(state.attendance != null && state.attendance.punch_out == null) ? dayjs().format("HH:mm") : state.attendance?.punch_out,
+                punch_out:(state.attendance != null && state.attendance.punch_out == null) ? dayjs().format("HH:mm") : state.attendance == null ? null :state.attendance.punch_out,
                 attendance_date:new Date()
+            }
+
+            if(state.attendance == null){
+
+                try{
+                   let position:any = await getLongAndLat();
+                   _obj = {..._obj, 
+                        att_latitude:position.coords.latitude,
+                        att_longitude:position.coords.longitude
+                    };
+                }
+                catch(err){
+                    
+                }
             }
 
             let response = await protectedApi.post('/attendance/saveAttendance', _obj);
