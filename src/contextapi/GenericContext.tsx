@@ -12,6 +12,8 @@ import type {TableDataType as AppraiseeTableDataType, FormType as AppraiseeFormT
 import type {TableDataType as CompetencyTableDataType, FormType as CompetencyFormType} from "../types/Competency";
 import type {TableDataType as TimeTableDataType, FormType as TimeFormType, FilterType as TimeFilterType} from "../types/TimeSheets";
 import type {TableDataType as NoticeTableDataType, FormType as NoticeFormType} from "../types/Notice";
+import type {TableDataType as DepartmentTableDataType, FormType as DepartmentFormType} from "../types/Department";
+import type {TableDataType as DesignationTableDataType, FormType as DesignationFormType} from "../types/Designation";
 
 import GenericReducer from "../reducers/GenericReducer";
 
@@ -27,6 +29,8 @@ const Appraisee = createContext({} as ContextType<AppraiseeTableDataType, Apprai
 const Competency = createContext({} as ContextType<CompetencyTableDataType, CompetencyFormType>);
 const Time = createContext({} as ContextType<TimeTableDataType, TimeFormType, TimeFilterType>);
 const Notice = createContext({} as ContextType<NoticeTableDataType, NoticeFormType>);
+const Department = createContext({} as ContextType<DepartmentTableDataType, DepartmentFormType>);
+const Designation = createContext({} as ContextType<DesignationTableDataType, DesignationFormType>);
 
 const HolidayInitialValues:TState<HolidayTableDataType, HolidayFormType, HolidayFilterType> = {
     page:1,
@@ -165,6 +169,26 @@ const NoticeInitialValues:TState<NoticeTableDataType, NoticeFormType> = {
     editData:null
 }
 
+const DepartmentInitialValues:TState<DepartmentTableDataType, DepartmentFormType> = {
+    page:1,
+    show:"10",
+    data:[],
+    info:"",
+    totalPage:1,
+    is_updated:false,
+    editData:null
+}
+
+const DesignationInitialValues:TState<DesignationTableDataType, DesignationFormType> = {
+    page:1,
+    show:"10",
+    data:[],
+    info:"",
+    totalPage:1,
+    is_updated:false,
+    editData:null
+}
+
 export function HolidayContext({children}:PropsWithChildren){
     const [state, dispatch] = useReducer(GenericReducer<HolidayTableDataType, HolidayFormType, HolidayFilterType>, HolidayInitialValues);
     return <Holiday.Provider value={{state, dispatch}}>{children}</Holiday.Provider>
@@ -225,6 +249,16 @@ export function NoticeContext({children}:PropsWithChildren){
     return <Notice.Provider value={{state, dispatch}}>{children}</Notice.Provider>
 }
 
+export function DepartmentContext({children}:PropsWithChildren){
+    const [state, dispatch] = useReducer(GenericReducer<DepartmentTableDataType, DepartmentFormType>, DepartmentInitialValues);
+    return <Department.Provider value={{state, dispatch}}>{children}</Department.Provider>
+}
+
+export function DesignationContext({children}:PropsWithChildren){
+    const [state, dispatch] = useReducer(GenericReducer<DesignationTableDataType, DesignationFormType>, DesignationInitialValues);
+    return <Designation.Provider value={{state, dispatch}}>{children}</Designation.Provider>
+}
+
 export const UseHoliday = () => useContext(Holiday);
 export const UseLeaveType = () => useContext(LeaveType);
 export const UseClients = () => useContext(Clients);
@@ -237,3 +271,5 @@ export const UseAppraisee = () => useContext(Appraisee);
 export const UseCompetency = () => useContext(Competency);
 export const UseTime = () => useContext(Time);
 export const UseNotice = () => useContext(Notice);
+export const UseDepartment = () => useContext(Department);
+export const UseDesignation = () => useContext(Designation);

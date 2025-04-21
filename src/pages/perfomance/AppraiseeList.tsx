@@ -226,7 +226,7 @@ export default function AppraiseeList() {
                     :    <Box component="form" onSubmit={form.onSubmit(values => handleSubmit(values))}>
                     <Grid gutter='sm' align='flex-end'>
                         <Grid.Col span={12}>
-                          <CustomSelect data={employees !} label="Employee" {...form.getInputProps('user_login_id')}/>
+                          <CustomSelect data={employees != null ? employees : []} label="Employee" {...form.getInputProps('user_login_id')}/>
                         </Grid.Col>
                         <Grid.Col span={12}>
                             <Group justify="flex-end" gap='sm'>

@@ -1,6 +1,7 @@
 import { ActionIcon, Box , Flex, Image, Title} from "@mantine/core"
 import {NavLink} from "react-router-dom";
 import {FaUsers, FaCalendar, FaClipboardList, FaMoneyBill, FaBullhorn, FaCalendarCheck, FaXmark, FaStar} from "react-icons/fa6";
+import { SiWorldhealthorganization } from "react-icons/si";
 import { RxDashboard } from "react-icons/rx";
 import favicon  from "../../assets/images/favicon.png";
 import LinksGroup from "./LinksGroup";
@@ -16,6 +17,16 @@ function SideBar() {
 
   const NavbarLinks = [
     { label: 'Dashboard', icon: <RxDashboard/>, id:1, link:'/dashboard', access:[1000,100, 20, 1]},
+    {
+      label: 'Organization',
+      icon: <SiWorldhealthorganization/>,
+      initiallyOpened: locationUrl.includes('/organization/'),
+      group: [
+        { label: 'Department', link: '/organization/department', id:22, access:[1000]},
+        { label: 'Designation', link: '/organization/designation', id:23, access:[1000]},
+      ],
+      group_access:[1000] 
+    },
     {
       label: 'Employees',
       icon: <FaUsers/>,

@@ -9,7 +9,10 @@ import Layout from './components/layout/Layout';
 import DashboardContext from "./contextapi/DashboardContext";
 import EmployeeFormContext from "./contextapi/EmployeeFormContext";
 import EmployeeListContext from "./contextapi/EmployeeListContext";
-import { HolidayContext, LeaveTypeContext , ClientsContext, ProjectsContext, TeamContext, TasksContext, AReportContext, ACycleContext, AppraiseeContext, CompetencyContext, TimeContext, NoticeContext} from './contextapi/GenericContext';
+import { HolidayContext, LeaveTypeContext , ClientsContext, ProjectsContext, 
+    TeamContext, TasksContext, AReportContext, ACycleContext, 
+    AppraiseeContext, CompetencyContext, TimeContext, NoticeContext, 
+    DepartmentContext, DesignationContext} from './contextapi/GenericContext';
 import AttendanceContent from './contextapi/AttendanceContent';
 import PayrollContext from './contextapi/PayrollContext';
 import LeaveRequestContext from './contextapi/LeaveRequestContext';
@@ -47,6 +50,8 @@ const AppraisalCycle = lazy(()=> import('./pages/perfomance/AppraisalCycle'));
 const AppraiseeList = lazy(()=> import('./pages/perfomance/AppraiseeList'));
 const Competency = lazy(()=> import('./pages/perfomance/Competency'));
 const MyReview = lazy(()=> import('./pages/perfomance/MyReview'));
+const Department = lazy(()=> import('./pages/organization/Department'));
+const Designation = lazy(()=> import('./pages/organization/Designation'));
 
 export default function Router(){
 
@@ -57,6 +62,9 @@ export default function Router(){
 
             <Route element={<Layout/>} >
                 <Route path='/dashboard' element={<RequiredAuth m_user_type_id={[1000, 100, 20, 1]}><DashboardContext><Dashboard /></DashboardContext></RequiredAuth>} />
+
+                <Route path='/organization/department' element={<RequiredAuth m_user_type_id={[1000]}><DepartmentContext><Department /></DepartmentContext></RequiredAuth>} />
+                <Route path='/organization/designation' element={<RequiredAuth m_user_type_id={[1000]}><DesignationContext><Designation /></DesignationContext></RequiredAuth>} />
 
                 <Route path='/employees/form' element={<RequiredAuth m_user_type_id={[1000, 100]}><EmployeeFormContext><EmployeesForm /></EmployeeFormContext></RequiredAuth>} />
                 <Route path='/employees/list' element={<RequiredAuth m_user_type_id={[1000, 100]}><EmployeeListContext><EmployeesList /></EmployeeListContext></RequiredAuth>} />
